@@ -8,11 +8,8 @@ class Place(BaseModel):
         super().__init__()
 
         self.title = title[:100] if len(title) <= 100 else title[:100]
-
         self.description = description
-
         self.price = price if price > 0 else None
-
         self.latitude = latitude if -90.0 <= latitude <= 90.0 else None
         self.longitude = longitude if -180.0 <= longitude <= 180.0 else None
 

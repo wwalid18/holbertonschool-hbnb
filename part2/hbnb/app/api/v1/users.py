@@ -10,6 +10,8 @@ user_model = api.model('User', {
     'email': fields.String(required=True, description='Email of the user')
 })
 
+facade = HBnBFacade()  # ✅ Singleton instance outside class to avoid duplication
+
 @api.route('/')
 class UserList(Resource):
     @api.expect(user_model, validate=True)
@@ -18,7 +20,6 @@ class UserList(Resource):
     def post(self):
         """Register a new user"""
         user_data = api.payload
-        facade = HBnBFacade()  # Instance created inside the function
         new_user = facade.create_user(user_data)
         if not new_user:
             return {'error': 'Email already registered'}, 400
@@ -32,7 +33,6 @@ class UserList(Resource):
     @api.response(200, 'Users retrieved successfully')
     def get(self):
         """Retrieve all users"""
-        facade = HBnBFacade()  # Instance created inside the function
         users = facade.get_all_users()
         return [{
             'id': user.id,
@@ -41,13 +41,12 @@ class UserList(Resource):
             'email': user.email
         } for user in users], 200
 
-@api.route('/<user_id>')
+@api.route('/<string:user_id>')  # ✅ Ensure Flask treats user_id as a string
 class UserResource(Resource):
     @api.response(200, 'User details retrieved successfully')
     @api.response(404, 'User not found')
     def get(self, user_id):
         """Retrieve a user by ID"""
-        facade = HBnBFacade()  # Instance created inside the function
         user = facade.get_user(user_id)
         if not user:
             return {'error': 'User not found'}, 404
@@ -64,7 +63,6 @@ class UserResource(Resource):
     def put(self, user_id):
         """Update user details"""
         update_data = api.payload
-        facade = HBnBFacade()  # Instance created inside the function
         updated_user = facade.update_user(user_id, update_data)
         if not updated_user:
             return {'error': 'User not found'}, 404
