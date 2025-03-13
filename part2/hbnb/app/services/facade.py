@@ -35,35 +35,3 @@ class HBnBFacade:
             return None
         user.update(update_data)
         return user
-
-    # ✅ Place Methods
-    def create_place(self, place_data):
-        """Create a new place"""
-        print(f"🔹 Checking if user exists for owner_id {place_data['owner_id']}...")
-        owner = self.get_user(place_data['owner_id'])  # ✅ Ensure user exists
-
-        if not owner:
-            print(f"❌ Error: User with ID {place_data['owner_id']} does not exist!")
-            raise ValueError("❌ Error: Owner does not exist!")
-
-        amenities = []
-        for amenity_id in place_data['amenities']:
-            amenity = self.get_amenity(amenity_id)
-            if not amenity:
-                print(f"❌ Error: Amenity with ID {amenity_id} does not exist!")
-                raise ValueError(f"❌ Error: Amenity with ID {amenity_id} does not exist!")
-            amenities.append(amenity)
-
-        place = Place(
-            title=place_data['title'],
-            description=place_data.get('description', ''),
-            price=place_data['price'],
-            latitude=place_data['latitude'],
-            longitude=place_data['longitude'],
-            owner=owner,
-        )
-        place.amenities = amenities  # ✅ Assign amenities after validating
-
-        self.place_repo.add(place)
-        print(f"✅ Place '{place.title}' created successfully!")
-        return place
