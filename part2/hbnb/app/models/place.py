@@ -1,30 +1,59 @@
 from app.models.base_model import BaseModel
-from app.models.user import User
+from app.models.user import User  # Ensure User is imported
 
 class Place(BaseModel):
-    """Represents a rental place"""
+    """Represents a rental place owned by a User."""
 
     def __init__(self, title, description, price, latitude, longitude, owner):
-        super().__init__()
+        super().__init__()  # Call BaseModel to generate ID and timestamps
 
-        self.title = title[:100] if len(title) <= 100 else title[:100]
-        self.description = description
-        self.price = price if price > 0 else None
-        self.latitude = latitude if -90.0 <= latitude <= 90.0 else None
-        self.longitude = longitude if -180.0 <= longitude <= 180.0 else None
+        # Validate title
+        if not title or len(title) > 100:
+            raise ValueError("Title is required (max 100 characters).")
+        
+        # Validate price (must be positive)
+        if not isinstance(price, (int, float)) or price <= 0:
+            raise ValueError("Price must be a positive number.")
+        
+        # Validate latitude and longitude
+        if not (-90.0 <= latitude <= 90.0):
+            raise ValueError("Latitude must be between -90.0 and 90.0.")
+        if not (-180.0 <= longitude <= 180.0):
+            raise ValueError("Longitude must be between -180.0 and 180.0.")
 
-        if isinstance(owner, User):
-            self.owner = owner
-        else:
-            raise ValueError("Owner must be a valid User instance")
+        # Validate owner (must be a valid User instance)
+        if not isinstance(owner, User):
+            raise ValueError("Owner must be a valid User instance.")
 
-        self.reviews = []
-        self.amenities = []
+        # Assign values
+        self.title = title.strip()
+        self.description = description.strip() if description else ""
+        self.price = float(price)
+        self.latitude = latitude
+        self.longitude = longitude
+        self.owner = owner  # One-to-Many relationship with User
+        self.reviews = []  # One-to-Many relationship with Review
+        self.amenities = set()  # Many-to-Many relationship with Amenity
+
+        # Link this place to the owner
+        owner.add_place(self)
 
     def add_review(self, review):
-        """Add a review to the place."""
-        self.reviews.append(review)
+        """Add a review to this place."""
+        from app.models.review import Review  # Avoid circular import
+        if isinstance(review, Review):
+            self.reviews.append(review)
+        else:
+            raise ValueError("Invalid review instance.")
 
     def add_amenity(self, amenity):
-        """Add an amenity to the place."""
-        self.amenities.append(amenity)
+        """Link an amenity to this place."""
+        from app.models.amenity import Amenity  # Avoid circular import
+        if isinstance(amenity, Amenity):
+            self.amenities.add(amenity)
+        else:
+            raise ValueError("Invalid amenity instance.")
+
+    def __repr__(self):
+        """Returns a readable string representation of the place."""
+        return f"Place(Title: {self.title}, Owner: {self.owner.first_name}, Price: {self.price}, Amenities: {len(self.amenities)})"

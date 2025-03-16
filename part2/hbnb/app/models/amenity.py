@@ -1,37 +1,30 @@
-class Place(BaseModel):
-    """Represents a place owned by a User, with amenities."""
+from app.models.base_model import BaseModel
 
-    def __init__(self, name, location, owner):
-        super().__init__()
-        self.name = self.validate_name(name)
-        self.location = self.validate_location(location)
-        self.owner = owner
-        self.amenities = set()
+class Amenity(BaseModel):
+    """Represents an amenity that can be associated with a place."""
 
-        if not isinstance(owner, User):
-            raise ValueError("Owner must be an instance of User.")
-        owner.add_place(self)
+    def __init__(self, name):
+        super().__init__()  # Call BaseModel to generate ID and timestamps
 
-    def add_amenity(self, amenity):
-        """Link an amenity to this place."""
-        if not isinstance(amenity, Amenity):
-            raise ValueError("Invalid amenity instance.")
-        self.amenities.add(amenity)
-        amenity.places.add(self)
+        # Validate name (must be required and max 50 characters)
+        if not name or not isinstance(name, str):
+            raise ValueError("Amenity name is required and must be a string.")
+        if len(name) > 50:
+            raise ValueError("Amenity name must not exceed 50 characters.")
 
-    @staticmethod
-    def validate_name(name):
-        """Ensure name is a valid non-empty string."""
-        if not isinstance(name, str) or not name.strip():
-            raise ValueError("Place name is required and must be a non-empty string.")
-        return name.strip()
+        # Assign values
+        self.name = name.strip()
+        self.places = set()  # Many-to-Many relationship with Place
 
-    @staticmethod
-    def validate_location(location):
-        """Ensure location is a valid non-empty string."""
-        if not isinstance(location, str) or not location.strip():
-            raise ValueError("Location is required and must be a non-empty string.")
-        return location.strip()
+    def link_place(self, place):
+        """Link this amenity to a place."""
+        from app.models.place import Place  # Avoid circular import
+        if isinstance(place, Place):
+            self.places.add(place)
+            place.add_amenity(self)  # Establish relationship
+        else:
+            raise ValueError("Invalid Place instance.")
 
     def __repr__(self):
-        return f"Place(Name: {self.name}, Location: {self.location}, Owner: {self.owner.first_name} {self.owner.last_name}, Amenities: {len(self.amenities)})"
+        """Returns a readable string representation of the amenity."""
+        return f"Amenity(Name: {self.name}, Linked Places: {len(self.places)})"
