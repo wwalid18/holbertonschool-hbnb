@@ -34,12 +34,17 @@ class HBnBFacade:
 
     ### ✅ Amenity Methods ###
     def create_amenity(self, amenity_data):
-        """Creates a new amenity and stores it in the repository."""
-        existing_amenity = self.get_amenity_by_name(amenity_data['name'])
-        if existing_amenity:
-            return None  # Amenity already exists
+        """Creates a new amenity and stores it in the repository with validation."""
+        name = amenity_data.get('name', '').strip()
+    
+        if not name:  
+            raise ValueError("Amenity name cannot be empty")
 
-        amenity = Amenity(**amenity_data)
+        existing_amenity = self.get_amenity_by_name(name)
+        if existing_amenity:
+            raise ValueError("Amenity already exists")
+
+        amenity = Amenity(name=name)
         self.amenity_repo.add(amenity)
         return amenity
 
@@ -56,12 +61,16 @@ class HBnBFacade:
         return self.amenity_repo.get_all()
 
     def update_amenity(self, amenity_id, amenity_data):
-        """Updates an amenity's details."""
+        """Updates an amenity's details with validation."""
         amenity = self.get_amenity(amenity_id)
         if not amenity:
             return None  
 
-        self.amenity_repo.update(amenity_id, amenity_data)
+        name = amenity_data.get('name', '').strip()
+        if not name:
+            raise ValueError("Amenity name cannot be empty")
+
+        self.amenity_repo.update(amenity_id, {'name': name})
         return self.get_amenity(amenity_id)
 
     ### ✅ Place Methods ###
@@ -101,10 +110,10 @@ class HBnBFacade:
         )
 
         for amenity in amenities:
-            place.add_amenity(amenity)
+            place.amenities.add(amenity)
 
         self.place_repo.add(place)
-        return place
+        return place.to_dict()  # Return the Place object as a dictionary
 
     def get_place(self, place_id):
         """Retrieves a place by ID, including its owner and amenities."""
@@ -112,21 +121,7 @@ class HBnBFacade:
         if not place:
             return None
 
-        return {
-            "id": place.id,
-            "title": place.title,
-            "description": place.description,
-            "price": place.price,
-            "latitude": place.latitude,
-            "longitude": place.longitude,
-            "owner": {
-                "id": place.owner.id,
-                "first_name": place.owner.first_name,
-                "last_name": place.owner.last_name,
-                "email": place.owner.email
-            },
-            "amenities": [{"id": amenity.id, "name": amenity.name} for amenity in place.amenities]
-        }
+        return place.to_dict()
 
     def get_all_places(self):
         """Retrieves a list of all places."""

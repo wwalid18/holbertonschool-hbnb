@@ -1,10 +1,11 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
 
-api = Namespace('places', description='Place operations')
+# Define the namespace
+ns = Namespace('places', description='Place operations')
 
 # ✅ Define the Review Model for Places
-review_model = api.model('PlaceReview', {
+review_model = ns.model('PlaceReview', {
     'id': fields.String(description='Review ID'),
     'text': fields.String(description='Text of the review'),
     'rating': fields.Integer(description='Rating of the place (1-5)'),
@@ -12,13 +13,13 @@ review_model = api.model('PlaceReview', {
 })
 
 # ✅ Define the Amenity Model for Places
-amenity_model = api.model('PlaceAmenity', {
+amenity_model = ns.model('PlaceAmenity', {
     'id': fields.String(description='Amenity ID'),
     'name': fields.String(description='Name of the amenity')
 })
 
 # ✅ Define the User Model for Place Owners
-user_model = api.model('PlaceUser', {
+user_model = ns.model('PlaceUser', {
     'id': fields.String(description='User ID'),
     'first_name': fields.String(description='First name of the owner'),
     'last_name': fields.String(description='Last name of the owner'),
@@ -26,7 +27,7 @@ user_model = api.model('PlaceUser', {
 })
 
 # ✅ Define the Place Model (Includes Owner, Amenities, and Reviews)
-place_model = api.model('Place', {
+place_model = ns.model('Place', {
     'title': fields.String(required=True, description='Title of the place'),
     'description': fields.String(description='Description of the place'),
     'price': fields.Float(required=True, description='Price per night'),
@@ -39,31 +40,31 @@ place_model = api.model('Place', {
 })
 
 
-@api.route('')  # ✅ Corrected: This correctly maps to /api/v1/places
+@ns.route('/')  # ✅ Corrected: This correctly maps to /api/v1/places
 class PlaceList(Resource):
-    @api.expect(place_model, validate=True)
-    @api.response(201, 'Place successfully created')
-    @api.response(400, 'Invalid input data')
+    @ns.expect(place_model, validate=True)
+    @ns.response(201, 'Place successfully created')
+    @ns.response(400, 'Invalid input data')
     def post(self):
         """Register a new place"""
-        place_data = api.payload
+        place_data = ns.payload
         try:
             new_place = facade.create_place(place_data)
             return new_place, 201
         except ValueError as e:
             return {'error': str(e)}, 400
 
-    @api.response(200, 'List of places retrieved successfully')
+    @ns.response(200, 'List of places retrieved successfully')
     def get(self):
         """Retrieve a list of all places"""
         places = facade.get_all_places()
         return places, 200
 
 
-@api.route('/<string:place_id>')  # ✅ Corrected for valid route mapping
+@ns.route('/<string:place_id>')  # ✅ Corrected for valid route mapping
 class PlaceResource(Resource):
-    @api.response(200, 'Place details retrieved successfully')
-    @api.response(404, 'Place not found')
+    @ns.response(200, 'Place details retrieved successfully')
+    @ns.response(404, 'Place not found')
     def get(self, place_id):
         """Get place details by ID"""
         place = facade.get_place(place_id)
@@ -71,13 +72,13 @@ class PlaceResource(Resource):
             return {'error': 'Place not found'}, 404
         return place, 200
 
-    @api.expect(place_model, validate=True)
-    @api.response(200, 'Place updated successfully')
-    @api.response(404, 'Place not found')
-    @api.response(400, 'Invalid input data')
+    @ns.expect(place_model, validate=True)
+    @ns.response(200, 'Place updated successfully')
+    @ns.response(404, 'Place not found')
+    @ns.response(400, 'Invalid input data')
     def put(self, place_id):
         """Update a place's information"""
-        update_data = api.payload
+        update_data = ns.payload
         try:
             updated_place = facade.update_place(place_id, update_data)
             if not updated_place:

@@ -41,3 +41,22 @@ class Place(BaseModel):
     def __repr__(self):
         """Returns a readable string representation of the place."""
         return f"Place(Title: {self.title}, Owner: {self.owner.first_name}, Price: {self.price}, Amenities: {len(self.amenities)})"
+
+    def to_dict(self):
+        """Convert the Place object to a dictionary."""
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "price": self.price,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "owner": {
+                "id": self.owner.id,
+                "first_name": self.owner.first_name,
+                "last_name": self.owner.last_name,
+                "email": self.owner.email
+            },
+            "reviews": [review.to_dict() for review in self.reviews],
+            "amenities": [{"id": amenity.id, "name": amenity.name} for amenity in self.amenities]
+        }
