@@ -10,11 +10,11 @@ class Place(BaseModel):
         # Validate title
         if not title or len(title) > 100:
             raise ValueError("Title is required (max 100 characters).")
-        
+
         # Validate price (must be positive)
         if not isinstance(price, (int, float)) or price <= 0:
             raise ValueError("Price must be a positive number.")
-        
+
         # Validate latitude and longitude
         if not (-90.0 <= latitude <= 90.0):
             raise ValueError("Latitude must be between -90.0 and 90.0.")
@@ -37,22 +37,6 @@ class Place(BaseModel):
 
         # Link this place to the owner
         owner.add_place(self)
-
-    def add_review(self, review):
-        """Add a review to this place."""
-        from app.models.review import Review  # Avoid circular import
-        if isinstance(review, Review):
-            self.reviews.append(review)
-        else:
-            raise ValueError("Invalid review instance.")
-
-    def add_amenity(self, amenity):
-        """Link an amenity to this place."""
-        from app.models.amenity import Amenity  # Avoid circular import
-        if isinstance(amenity, Amenity):
-            self.amenities.add(amenity)
-        else:
-            raise ValueError("Invalid amenity instance.")
 
     def __repr__(self):
         """Returns a readable string representation of the place."""
