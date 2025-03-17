@@ -11,34 +11,57 @@ review_model = api.model('Review', {
     'place_id': fields.String(required=True, description='ID of the place')
 })
 
-@api.route('/')
+@api.route('')  # ✅ Corrected: This correctly maps to /api/v1/reviews
 class ReviewList(Resource):
     @api.expect(review_model)
     @api.response(201, 'Review successfully created')
     @api.response(400, 'Invalid input data')
     def post(self):
         """Register a new review"""
-        data = api.payload
-        result = facade.create_review(data)
-        if result:
-            return result, 201
-        return {"error": "Invalid data"}, 400
+        review_data = api.payload
+
+        try:
+            new_review = facade.create_review(review_data)
+            return {
+                "id": new_review.id,
+                "text": new_review.text,
+                "rating": new_review.rating,
+                "user_id": new_review.user.id,
+                "place_id": new_review.place.id
+            }, 201
+        except ValueError as e:
+            return {"error": str(e)}, 400
 
     @api.response(200, 'List of reviews retrieved successfully')
     def get(self):
         """Retrieve a list of all reviews"""
-        return facade.get_all_reviews(), 200
+        reviews = facade.get_all_reviews()
+        return [{
+            "id": review.id,
+            "text": review.text,
+            "rating": review.rating,
+            "user_id": review.user.id,
+            "place_id": review.place.id
+        } for review in reviews], 200
 
-@api.route('/<review_id>')
+
+@api.route('/<string:review_id>')  # ✅ Corrected to ensure proper route mapping
 class ReviewResource(Resource):
     @api.response(200, 'Review details retrieved successfully')
     @api.response(404, 'Review not found')
     def get(self, review_id):
         """Get review details by ID"""
-        result = facade.get_review(review_id)
-        if result:
-            return result, 200
-        return {"error": "Review not found"}, 404
+        review = facade.get_review(review_id)
+        if not review:
+            return {"error": "Review not found"}, 404
+
+        return {
+            "id": review.id,
+            "text": review.text,
+            "rating": review.rating,
+            "user_id": review.user.id,
+            "place_id": review.place.id
+        }, 200
 
     @api.expect(review_model)
     @api.response(200, 'Review updated successfully')
@@ -46,29 +69,47 @@ class ReviewResource(Resource):
     @api.response(400, 'Invalid input data')
     def put(self, review_id):
         """Update a review's information"""
-        data = api.payload
-        result = facade.update_review(review_id, data)
-        if result:
-            return {"message": "Review updated successfully"}, 200
-        return {"error": "Invalid data or review not found"}, 400
+        review_data = api.payload
+        try:
+            updated_review = facade.update_review(review_id, review_data)
+            if not updated_review:
+                return {"error": "Review not found"}, 404
+
+            return {
+                "id": updated_review.id,
+                "text": updated_review.text,
+                "rating": updated_review.rating,
+                "user_id": updated_review.user.id,
+                "place_id": updated_review.place.id
+            }, 200
+        except ValueError as e:
+            return {"error": str(e)}, 400
 
     @api.response(200, 'Review deleted successfully')
     @api.response(404, 'Review not found')
     def delete(self, review_id):
         """Delete a review"""
-        success = facade.delete_review(review_id)
-        if success:
-            return {"message": "Review deleted successfully"}, 200
-        return {"error": "Review not found"}, 404
+        deleted = facade.delete_review(review_id)
+        if not deleted:
+            return {"error": "Review not found"}, 404
 
-@api.route('/places/<string:place_id>/reviews')
+        return {"message": "Review deleted successfully"}, 200
+
+
+@api.route('/places/<string:place_id>')  # ✅ Corrected for valid route structure
 class PlaceReviewList(Resource):
     @api.response(200, 'List of reviews for the place retrieved successfully')
     @api.response(404, 'Place not found')
     def get(self, place_id):
-        """Retrieve all reviews for a specific place"""
-        result = facade.get_all_reviews()
-        if result:
-            place_reviews = [review for review in result if review['place_id'] == place_id]
-            return place_review_list, 200
-        return {"error": "Place not found or has no reviews"}, 404
+        """Get all reviews for a specific place"""
+        reviews = facade.get_reviews_by_place(place_id)
+        if not reviews:
+            return {"error": "Place not found or no reviews available"}, 404
+
+        return [{
+            "id": review.id,
+            "text": review.text,
+            "rating": review.rating,
+            "user_id": review.user.id,
+            "place_id": review.place.id
+        } for review in reviews], 200
