@@ -8,7 +8,8 @@ ns = Namespace('users', description='User operations')
 user_model = ns.model('User', {
     'first_name': fields.String(required=True, description='First name of the user'),
     'last_name': fields.String(required=True, description='Last name of the user'),
-    'email': fields.String(required=True, description='Email of the user')
+    'email': fields.String(required=True, description='Email of the user'),
+    'is_admin': fields.Boolean(required=False, description='is the user admin')
 })
 
 @ns.route('/')
@@ -31,7 +32,14 @@ class UserList(Resource):
             return {'error': 'Invalid email format'}, 400 
 
         new_user = facade.create_user(user_data)
-        return {'id': new_user.id, 'first_name': new_user.first_name, 'last_name': new_user.last_name, 'email': new_user.email}, 200
+        return {'id': new_user.id, 'first_name': new_user.first_name, 'last_name': new_user.last_name, 'email': new_user.email, 'is_admin': new_user.is_admin}, 200
+
+    @ns.response(200, 'List of users retrieved successfully')
+    def get(self):
+        """Retrieve a list of all users"""
+        users = facade.get_all_users()
+        return [{'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email, 'is_admin': user.is_admin} for user in users], 200
+        
 
 @ns.route('/<user_id>')
 class UserResource(Resource):

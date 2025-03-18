@@ -25,20 +25,6 @@ def create_app():
             ]
         })
 
-    # ✅ Add a root endpoint for /api/v1/
-    @app.route('/api/v1/')
-    def api_v1_root():
-        return jsonify({
-            "message": "Welcome to the HBnB API (v1)! 🎉",
-            "documentation": "/api/v1/docs",
-            "available_endpoints": [
-                "/api/v1/users",
-                "/api/v1/places",
-                "/api/v1/amenities",
-                "/api/v1/reviews"
-            ]
-        })
-
     # ✅ Initialize the API AFTER defining the root route
     api = Api(app, version='1.0', title='HBnB API', description='HBnB Application API', 
               doc='/api/v1/docs')

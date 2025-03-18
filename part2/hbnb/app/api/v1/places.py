@@ -60,7 +60,7 @@ update_place_model = ns.model('UpdatePlace', {
     'reviews': fields.List(fields.Nested(review_model), required=False, description='List of reviews')
 })
 
-@ns.route('/')  # ✅ Corrected: This correctly maps to /api/v1/places
+@ns.route('/')  
 class PlaceList(Resource):
     @ns.expect(place_model, validate=True)
     @ns.response(201, 'Place successfully created')

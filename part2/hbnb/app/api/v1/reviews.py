@@ -102,8 +102,8 @@ class ReviewResource(Resource):
     @ns.response(404, 'Review not found')
     def delete(self, review_id):
         """Delete a review"""
-        deleted = facade.delete_review(review_id)
-        if not deleted:
+        review = facade.get_review(review_id)
+        if not review:
             return {"error": "Review not found"}, 404
 
         return {"message": "Review deleted successfully"}, 200

@@ -42,6 +42,16 @@ class User(BaseModel):
         else:
             raise ValueError("Invalid place or owner mismatch.")
 
+    def to_dict(self):
+        """Convert the User object to a dictionary."""
+        return {
+            "id": self.id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "email": self.email,
+            "is_admin": self.is_admin  # Include is_admin in the dictionary
+        }
+
     def __repr__(self):
         """Returns a readable string representation of the user."""
         return f"User({self.first_name} {self.last_name}, Email: {self.email}, Admin: {self.is_admin})"

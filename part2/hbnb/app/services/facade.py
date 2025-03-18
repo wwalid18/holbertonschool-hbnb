@@ -2,7 +2,7 @@ from app.persistence.repository import InMemoryRepository
 from app.models.amenity import Amenity
 from app.models.user import User
 from app.models.place import Place
-from app.models.review import Review  # Ensure Review is imported
+from app.models.review import Review
 
 class HBnBFacade:
     """Facade to manage business logic between API and repository."""
@@ -34,18 +34,43 @@ class HBnBFacade:
 
     ### ✅ Amenity Methods ###
     def create_amenity(self, amenity_data):
-        """Creates a new amenity and stores it in the repository with validation."""
-        name = amenity_data.get('name', '').strip()
-    
-        if not name:  
-            raise ValueError("Amenity name cannot be empty")
+        """Creates a new amenity and links it to a place."""
+        print(f"Amenity data: {amenity_data}")  # Debug log
 
-        existing_amenity = self.get_amenity_by_name(name)
-        if existing_amenity:
-            raise ValueError("Amenity already exists")
+        # Fetch the place and user
+        place_id = amenity_data['place_id']
+        user_id = amenity_data['user_id']
 
-        amenity = Amenity(name=name)
+        print(f"Fetching place with ID: {place_id}")  # Debug log
+        place = self.place_repo.get(place_id)
+        print(f"Place found: {place}")  # Debug log
+
+        print(f"Fetching user with ID: {user_id}")  # Debug log
+        user = self.user_repo.get(user_id)
+        print(f"User found: {user}")  # Debug log
+
+        # Ensure the place and user exist
+        if not place:
+            raise ValueError("Place not found.")
+        if not user:
+            raise ValueError("User not found.")
+
+        # Ensure the user is the owner of the place
+        if place.owner.id != user.id:
+            raise ValueError("Only the owner of the place can add amenities.")
+
+        # Ensure the amenity name is unique for the place
+        existing_amenities = [a for a in self.amenity_repo.get_all() if a.place_id == place.id]
+        if any(a.name == amenity_data['name'] for a in existing_amenities):
+            raise ValueError("An amenity with this name already exists for the place.")
+
+        # Create the amenity
+        amenity = Amenity(name=amenity_data['name'], place_id=place.id)
         self.amenity_repo.add(amenity)
+
+        # Link the amenity to the place
+        amenity.link_place(place)
+
         return amenity
 
     def get_amenity(self, amenity_id):
@@ -76,6 +101,12 @@ class HBnBFacade:
     ### ✅ Place Methods ###
     def create_place(self, place_data):
         """Creates a new place with validation for price, location, and owner."""
+
+        # Ensure the user is an admin
+        owner = self.user_repo.get(place_data['owner_id'])
+        if not owner or not owner.is_admin:
+            raise ValueError("Only admin users can create places.")
+
         required_fields = ['title', 'price', 'latitude', 'longitude', 'owner_id']
         for field in required_fields:
             if field not in place_data or not place_data[field]:

@@ -9,29 +9,24 @@ facade = HBnBFacade()
 
 # Define the Amenity model for request validation
 amenity_model = ns.model('Amenity', {
-    'name': fields.String(required=True, description='Name of the amenity')
+    'name': fields.String(required=True, description='Name of the amenity'),
+    'place_id': fields.String(required=True, description='ID of the place'),
+    'user_id': fields.String(required=True, description='ID of the user')
 })
 
 @ns.route('/')
 class AmenityList(Resource):
     @ns.expect(amenity_model, validate=True)
-    @ns.response(201, 'Amenity successfully created')
+    @ns.response(201, 'amenity successfully created')
     @ns.response(400, 'Invalid input data')
     def post(self):
         """Register a new amenity"""
         amenity_data = ns.payload
-
-        # Ensure amenity name is unique
-        existing_amenity = facade.get_amenity_by_name(amenity_data['name'])
-        if existing_amenity:
-            return {'error': 'Amenity already exists'}, 400
-
-        # Create a new amenity
-        new_amenity = facade.create_amenity(amenity_data)
-        return {
-            'id': new_amenity.id,
-            'name': new_amenity.name
-        }, 201
+        try:
+            new_amenity = facade.create_amenity(amenity_data)
+            return new_amenity, 201
+        except ValueError as e:
+            return {'error': str(e)}, 400
 
     @ns.response(200, 'List of amenities retrieved successfully')
     def get(self):
@@ -39,7 +34,8 @@ class AmenityList(Resource):
         amenities = facade.get_all_amenities()
         return [{
             'id': amenity.id,
-            'name': amenity.name
+            'name': amenity.name,
+            'place_id': amenity.place_id
         } for amenity in amenities], 200
 
 @ns.route('/<string:amenity_id>')
@@ -53,7 +49,8 @@ class AmenityResource(Resource):
             return {'error': 'Amenity not found'}, 404
         return {
             'id': amenity.id,
-            'name': amenity.name
+            'name': amenity.name,
+            'place_id': amenity.place_id
         }, 200
 
     @ns.expect(amenity_model, validate=True)
