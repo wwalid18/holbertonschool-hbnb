@@ -38,6 +38,10 @@ class Place(BaseModel):
         # Link this place to the owner
         owner.add_place(self)
 
+    def add_review(self, review):
+        """Add a review to this place."""
+        self.reviews.append(review)
+
     def __repr__(self):
         """Returns a readable string representation of the place."""
         return f"Place(Title: {self.title}, Owner: {self.owner.first_name}, Price: {self.price}, Amenities: {len(self.amenities)})"

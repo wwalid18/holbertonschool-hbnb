@@ -33,6 +33,16 @@ class Review(BaseModel):
         # Link this review to the place
         place.add_review(self)
 
+    def to_dict(self):
+        """Convert the Review object to a dictionary."""
+        return {
+            "id": self.id,
+            "text": self.text,
+            "rating": self.rating,
+            "user_id": self.user.id,
+            "place_id": self.place.id
+        }
+
     def __repr__(self):
         """Returns a readable string representation of the review."""
         return f"Review(Rating: {self.rating}, Place: {self.place.title}, User: {self.user.first_name})"

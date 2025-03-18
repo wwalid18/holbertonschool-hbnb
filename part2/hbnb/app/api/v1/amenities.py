@@ -69,6 +69,5 @@ class AmenityResource(Resource):
             return {'error': 'Amenity not found'}, 404
 
         return {
-            'id': updated_amenity.id,
-            'name': updated_amenity.name
+            'message': 'Amenity updated successfully'
         }, 200

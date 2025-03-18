@@ -12,16 +12,34 @@ review_model = ns.model('Review', {
     'place_id': fields.String(required=True, description='ID of the place')
 })
 
-@ns.route('')  # ✅ Corrected: This correctly maps to /api/v1/reviews
+# Define a model for updating a review (only text and rating can be updated)
+update_review_model = ns.model('UpdateReview', {
+    'text': fields.String(required=False, description='Updated text of the review'),
+    'rating': fields.Integer(required=False, description='Updated rating of the place (1-5)')
+})
+
+@ns.route('/')
 class ReviewList(Resource):
-    @ns.expect(review_model)
+    @ns.expect(review_model)  # Expect the review_model as input
     @ns.response(201, 'Review successfully created')
     @ns.response(400, 'Invalid input data')
+    @ns.response(404, 'User or Place not found')
     def post(self):
-        """Register a new review"""
-        review_data = ns.payload
+        """
+        Register a new review.
+        
+        Example payload:
+        {
+          "text": "Great place to stay!",
+          "rating": 5,
+          "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "place_id": "1fa85f64-5717-4562-b3fc-2c963f66afa6"
+        }
+        """
+        review_data = ns.payload  # Get the JSON payload from the request
 
         try:
+            # Use the facade to create the review
             new_review = facade.create_review(review_data)
             return {
                 "id": new_review.id,
@@ -32,6 +50,8 @@ class ReviewList(Resource):
             }, 201
         except ValueError as e:
             return {"error": str(e)}, 400
+        except Exception as e:
+            return {"error": "User or Place not found"}, 404
 
     @ns.response(200, 'List of reviews retrieved successfully')
     def get(self):
@@ -40,13 +60,11 @@ class ReviewList(Resource):
         return [{
             "id": review.id,
             "text": review.text,
-            "rating": review.rating,
-            "user_id": review.user.id,
-            "place_id": review.place.id
+            "rating": review.rating
         } for review in reviews], 200
 
 
-@ns.route('/<string:review_id>')  # ✅ Corrected to ensure proper route mapping
+@ns.route('/<string:review_id>')
 class ReviewResource(Resource):
     @ns.response(200, 'Review details retrieved successfully')
     @ns.response(404, 'Review not found')
@@ -64,25 +82,19 @@ class ReviewResource(Resource):
             "place_id": review.place.id
         }, 200
 
-    @ns.expect(review_model)
+    @ns.expect(update_review_model)
     @ns.response(200, 'Review updated successfully')
     @ns.response(404, 'Review not found')
     @ns.response(400, 'Invalid input data')
     def put(self, review_id):
         """Update a review's information"""
-        review_data = ns.payload
+        update_data = ns.payload
         try:
-            updated_review = facade.update_review(review_id, review_data)
+            updated_review = facade.update_review(review_id, update_data)
             if not updated_review:
                 return {"error": "Review not found"}, 404
 
-            return {
-                "id": updated_review.id,
-                "text": updated_review.text,
-                "rating": updated_review.rating,
-                "user_id": updated_review.user.id,
-                "place_id": updated_review.place.id
-            }, 200
+            return {"message": "Review updated successfully"}, 200
         except ValueError as e:
             return {"error": str(e)}, 400
 
@@ -95,22 +107,3 @@ class ReviewResource(Resource):
             return {"error": "Review not found"}, 404
 
         return {"message": "Review deleted successfully"}, 200
-
-
-@ns.route('/places/<string:place_id>')  # ✅ Corrected for valid route structure
-class PlaceReviewList(Resource):
-    @ns.response(200, 'List of reviews for the place retrieved successfully')
-    @ns.response(404, 'Place not found')
-    def get(self, place_id):
-        """Get all reviews for a specific place"""
-        reviews = facade.get_reviews_by_place(place_id)
-        if not reviews:
-            return {"error": "Place not found or no reviews available"}, 404
-
-        return [{
-            "id": review.id,
-            "text": review.text,
-            "rating": review.rating,
-            "user_id": review.user.id,
-            "place_id": review.place.id
-        } for review in reviews], 200

@@ -153,9 +153,10 @@ class HBnBFacade:
         self.place_repo.update(place_id, place_data)
         return self.get_place(place_id)
 
+    ### ✅ Review Methods ###
     def create_review(self, review_data):
         """Creates a review with validation for user_id, place_id, and rating."""
-        required_fields = ['text', 'rating', 'place_id', 'user_id']
+        required_fields = ['text', 'rating', 'user_id', 'place_id']
         for field in required_fields:
             if field not in review_data or not review_data[field]:
                 raise ValueError(f"Missing required field: {field}")
@@ -173,7 +174,7 @@ class HBnBFacade:
         return review
 
     def get_review(self, review_id):
-        """Retrieves a review by its ID."""
+        """Retrieve a review by ID."""
         return self.review_repo.get(review_id)
 
     def get_all_reviews(self):
