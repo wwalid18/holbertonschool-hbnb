@@ -13,7 +13,7 @@ class HBnBFacade:
         self.review_repo = InMemoryRepository()
         self.amenity_repo = InMemoryRepository()
 
-    ### ✅ User Methods ###
+    ###  User Methods ###
     def get_all_users(self):
         """Retrieve all users"""
         return self.user_repo.get_all()
@@ -41,7 +41,7 @@ class HBnBFacade:
         """Retrieve a user by email."""
         return self.user_repo.get_by_attribute('email', email)
 
-    ### ✅ Amenity Methods ###
+    ### Amenity Methods ###
     def create_amenity(self, amenity_data):
         """Creates a review with validation for user_id, place_id, and rating."""
         required_fields = ['name', 'user_id', 'place_id']
@@ -85,7 +85,7 @@ class HBnBFacade:
         self.amenity_repo.update(amenity_id, {'name': name})
         return self.get_amenity(amenity_id)
 
-    ### ✅ Place Methods ###
+    ### Place Methods ###
     def create_place(self, place_data):
         """Creates a new place with validation for price, location, and owner."""
 
@@ -171,7 +171,7 @@ class HBnBFacade:
         self.place_repo.update(place_id, place_data)
         return self.get_place(place_id)
 
-    ### ✅ Review Methods ###
+    ### Review Methods ###
     def create_review(self, review_data):
         """Creates a review with validation for user_id, place_id, and rating."""
         required_fields = ['text', 'rating', 'user_id', 'place_id']
