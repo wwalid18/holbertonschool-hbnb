@@ -88,6 +88,5 @@ python3 run.py
  --- 
 
 ### **Authors**
- - Nour Kasmi [text](https://github.com/Nourkasmi)
- - Walid Chaouachi [text](https://github.com/wwalid18)
- 
+ - Nour Kasmi https://github.com/Nourkasmi
+ - Walid Chaouachi https://github.com/wwalid18
