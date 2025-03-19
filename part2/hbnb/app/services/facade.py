@@ -28,50 +28,37 @@ class HBnBFacade:
         """Retrieve a user by ID."""
         return self.user_repo.get(user_id)
 
+    def update_user(self, user_id, user_data):
+        """Updates a review with validation."""
+        user = self.user_repo.get(user_id)
+        if not user:
+            return None  
+
+        self.user_repo.update(user_id, user_data)
+        return self.get_user(user_id)
+
     def get_user_by_email(self, email):
         """Retrieve a user by email."""
         return self.user_repo.get_by_attribute('email', email)
 
     ### ✅ Amenity Methods ###
     def create_amenity(self, amenity_data):
-        """Creates a new amenity and links it to a place."""
-        print(f"Amenity data: {amenity_data}")  # Debug log
+        """Creates a review with validation for user_id, place_id, and rating."""
+        required_fields = ['name', 'user_id', 'place_id']
+        for field in required_fields:
+            if field not in amenity_data or not amenity_data[field]:
+                raise ValueError(f"Missing required field: {field}")
 
-        # Fetch the place and user
-        place_id = amenity_data['place_id']
-        user_id = amenity_data['user_id']
-
-        print(f"Fetching place with ID: {place_id}")  # Debug log
-        place = self.place_repo.get(place_id)
-        print(f"Place found: {place}")  # Debug log
-
-        print(f"Fetching user with ID: {user_id}")  # Debug log
-        user = self.user_repo.get(user_id)
-        print(f"User found: {user}")  # Debug log
-
-        # Ensure the place and user exist
-        if not place:
-            raise ValueError("Place not found.")
+        user = self.user_repo.get(amenity_data['user_id'])
         if not user:
             raise ValueError("User not found.")
+        place = self.place_repo.get(amenity_data['place_id'])
+        if not place:
+            raise ValueError("Place not found.")
 
-        # Ensure the user is the owner of the place
-        if place.owner.id != user.id:
-            raise ValueError("Only the owner of the place can add amenities.")
-
-        # Ensure the amenity name is unique for the place
-        existing_amenities = [a for a in self.amenity_repo.get_all() if a.place_id == place.id]
-        if any(a.name == amenity_data['name'] for a in existing_amenities):
-            raise ValueError("An amenity with this name already exists for the place.")
-
-        # Create the amenity
-        amenity = Amenity(name=amenity_data['name'], place_id=place.id)
-        self.amenity_repo.add(amenity)
-
-        # Link the amenity to the place
-        amenity.link_place(place)
-
-        return amenity
+        Amenity = Amenity(text=amenity_data['name'], user=user, place=place)
+        self.amenity_repo.add(Amenity)
+        return Amenity
 
     def get_amenity(self, amenity_id):
         """Retrieves an amenity by its ID."""

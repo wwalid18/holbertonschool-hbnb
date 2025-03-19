@@ -51,3 +51,28 @@ class UserResource(Resource):
         if not user:
             return {'error': 'User not found'}, 404
         return {'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email}, 200
+
+    @ns.response(200, 'user updated successfully')
+    @ns.response(404, 'Review not found')
+    @ns.response(400, 'Invalid input data')
+    def put(self, user_id):
+        """Update a review's information"""
+        update_data = ns.payload
+        try:
+            updated_review = facade.update_ruser(user_id, update_data)
+            if not updated_review:
+                return {"error": "Review not found"}, 404
+
+            return {"message": "Review updated successfully"}, 200
+        except ValueError as e:
+            return {"error": str(e)}, 400
+
+    @ns.response(200, 'Review deleted successfully')
+    @ns.response(404, 'Review not found')
+    def delete(self, review_id):
+        """Delete a review"""
+        review = facade.get_review(review_id)
+        if not review:
+            return {"error": "Review not found"}, 404
+
+        
