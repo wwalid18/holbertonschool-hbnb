@@ -11,7 +11,7 @@ def create_app():
     # Initialize the Flask app
     app = Flask(__name__)
 
-    # ✅ Add root route BEFORE initializing the API
+    #  Add root route BEFORE initializing the API
     @app.route('/')
     def home():
         return jsonify({
@@ -25,17 +25,17 @@ def create_app():
             ]
         })
 
-    # ✅ Initialize the API AFTER defining the root route
+    # Initialize the API AFTER defining the root route
     api = Api(app, version='1.0', title='HBnB API', description='HBnB Application API', 
               doc='/api/v1/docs')
 
-    # ✅ Import namespaces from individual files
+    # Import namespaces from individual files
     from app.api.v1.users import ns as user_namespace
     from app.api.v1.places import ns as place_namespace
     from app.api.v1.amenities import ns as amenity_namespace
     from app.api.v1.reviews import ns as review_namespace
 
-    # ✅ Register namespaces correctly
+    # Register namespaces correctly
     api.add_namespace(user_namespace, path='/api/v1/users')
     api.add_namespace(place_namespace, path='/api/v1/places')
     api.add_namespace(amenity_namespace, path='/api/v1/amenities')
