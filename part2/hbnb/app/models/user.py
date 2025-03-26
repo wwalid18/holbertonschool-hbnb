@@ -1,56 +1,57 @@
-# app/models/user.py
 import re
-from app.models.db_base import DBBaseModel
-from app import db, bcrypt
+from app.models.base_model import BaseModel
 
-class User(DBBaseModel):
-    __tablename__ = 'users'
-    
-    first_name = db.Column(db.String(50), nullable=False)
-    last_name = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(128), nullable=False)  # Stores the hashed password
-    is_admin = db.Column(db.Boolean, default=False)
-    
-    # One-to-many relationship with Place
-    places = db.relationship('Place', backref='owner', lazy=True)
-    
-    def __init__(self, first_name, last_name, email, password, is_admin=False):
+class User(BaseModel):
+    """A simple User class with basic attributes and relationships."""
+
+    _users = {}  # Dictionary to store users and ensure unique emails
+
+    def __init__(self, first_name, last_name, email, is_admin=False):
+        super().__init__()  # Call the BaseModel constructor (sets id, timestamps)
+
+        # Validate first name and last name
+        if not first_name or len(first_name) > 50:
+            raise ValueError("First name is required (max 50 characters).")
+        if not last_name or len(last_name) > 50:
+            raise ValueError("Last name is required (max 50 characters).")
+
+        # Validate email format
+        email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+        if not re.match(email_regex, email):
+            raise ValueError("Invalid email format.")
+
+        # Ensure the email is unique
+        if email in self._users:
+            raise ValueError("Email already registered.")
+
+        # Assign values
         self.first_name = first_name.strip()
         self.last_name = last_name.strip()
         self.email = email.strip()
-        self.hash_password(password)  # Hash and store the password
         self.is_admin = is_admin
+        self.places = []  # List to store places owned by this user
 
-    def hash_password(self, password):
-        """Hashes the password before storing it."""
-        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+        # Store the user by email to ensure uniqueness
+        self._users[email] = self  
 
-    def verify_password(self, password):
-        """Verifies if the provided password matches the hashed password."""
-        return bcrypt.check_password_hash(self.password, password)
-    
     def add_place(self, place):
-        """Link a place to this user.
-        
-        This method ensures that the provided place is a valid Place instance 
-        and that the place's owner is this user. If the check passes, it adds 
-        the place to the user's places collection.
-        """
+        """Link a place to this user."""
         from app.models.place import Place  # Avoid circular import
         if isinstance(place, Place) and place.owner == self:
             self.places.append(place)
         else:
             raise ValueError("Invalid place or owner mismatch.")
-    
+
     def to_dict(self):
+        """Convert the User object to a dictionary."""
         return {
-            'id': self.id,
-            'first_name': self.first_name,
-            'last_name': self.last_name,
-            'email': self.email,
-            'is_admin': self.is_admin
+            "id": self.id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "email": self.email,
+            "is_admin": self.is_admin  # Include is_admin in the dictionary
         }
-    
+
     def __repr__(self):
-        return f"User({self.first_name} {self.last_name}, Email: {self.email})"
+        """Returns a readable string representation of the user."""
+        return f"User({self.first_name} {self.last_name}, Email: {self.email}, Admin: {self.is_admin})"
