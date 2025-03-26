@@ -1,4 +1,5 @@
 from app.models.base_model import BaseModel
+from app.models.place import Place
 
 class Amenity(BaseModel):
     """Represents an amenity that can be associated with a place."""
@@ -18,11 +19,12 @@ class Amenity(BaseModel):
 
         # Assign values
         self.name = name.strip()
-        self.place_id = place_id  # Link the amenity to a specific place
+        self.place_id = place_id # Link the amenity to a specific place
+        self.user_id = None    
 
     def link_place(self, place):
         """Link this amenity to a place."""
-        from app.models.place import Place  # Avoid circular import
+
         if isinstance(place, Place):
             if place.id != self.place_id:
                 raise ValueError("Amenity cannot be linked to a different place.")
@@ -35,9 +37,10 @@ class Amenity(BaseModel):
         return {
             "id": self.id,
             "name": self.name,
-            "place_id": self.place_id
+            "place_id": self.place_id,
+            "user_id": self.user_id
         }
 
     def __repr__(self):
         """Returns a readable string representation of the amenity."""
-        return f"Amenity(Name: {self.name}, Place ID: {self.place_id})"
+        return f"Amenity(Name: {self.name}, Place ID: {self.place_id}, User ID: {self.user_id})"
