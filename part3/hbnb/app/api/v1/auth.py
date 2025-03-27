@@ -1,31 +1,29 @@
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import create_access_token
-from app.services import facade
+from app.services.facade import HBnBFacade
 
-api = Namespace('auth', description='Authentication operations')
+# Create the auth namespace
+ns = Namespace('auth', description='Authentication operations')
 
-# Model for input validation
-login_model = api.model('Login', {
+# Model for login input validation
+login_model = ns.model('Login', {
     'email': fields.String(required=True, description='User email'),
     'password': fields.String(required=True, description='User password')
 })
 
-@api.route('/login')
+@ns.route('/login')
 class Login(Resource):
-    @api.expect(login_model)
+    @ns.expect(login_model, validate=True)
     def post(self):
         """Authenticate user and return a JWT token"""
-        credentials = api.payload  # Get the email and password from the request payload
+        credentials = ns.payload  # Retrieve credentials from the request payload
         
-        # Step 1: Retrieve the user based on the provided email
+        facade = HBnBFacade()
         user = facade.get_user_by_email(credentials['email'])
         
-        # Step 2: Check if the user exists and the password is correct
         if not user or not user.verify_password(credentials['password']):
-            return {'error': 'Invalid credentials'}, 401
-
-        # Step 3: Create a JWT token with the user's id and is_admin flag
-        access_token = create_access_token(identity={'id': str(user.id), 'is_admin': user.is_admin})
+            ns.abort(401, "Invalid credentials")
         
-        # Step 4: Return the JWT token to the client
+        # Generate a JWT token embedding user's id and is_admin claim
+        access_token = create_access_token(identity={'id': str(user.id), 'is_admin': user.is_admin})
         return {'access_token': access_token}, 200

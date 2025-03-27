@@ -1,51 +1,51 @@
+# app/models/base_model.py
 import uuid
 from datetime import datetime
+from app import db  # 'db' is the SQLAlchemy instance created in your app/__init__.py
 
-class BaseModel:
-    """A base class for all models to handle common attributes and methods."""
-
-    _instances = {}  # Store instances in memory
-
-    def __init__(self):
-        self.id = str(uuid.uuid4())  # Store UUID as a string
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
-
-        self._instances[self.id] = self  # Register instance
-
+class BaseModel(db.Model):
+    __abstract__ = True  # This tells SQLAlchemy not to create a table for this model directly
+    
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
     def save(self):
-        """Update the updated_at timestamp whenever the object is modified."""
-        self.updated_at = datetime.now()
-
+        """Add the instance to the database session and commit."""
+        db.session.add(self)
+        db.session.commit()
+    
     def update(self, data):
         """
         Update attributes based on a dictionary of new values.
-        Ensures that only existing attributes are updated.
+        Ensures that only existing attributes are updated, then commits the changes.
         """
         for key, value in data.items():
-            if hasattr(self, key):  # Only update existing attributes
+            if hasattr(self, key):
                 setattr(self, key, value)
             else:
                 raise ValueError(f"Attribute '{key}' does not exist in {self.__class__.__name__}")
         self.save()
-
+    
     @classmethod
     def get_by_id(cls, obj_id):
-        """Retrieve an instance by its ID, return None if not found."""
-        return cls._instances.get(obj_id)
-
+        """Retrieve an instance by its ID using a SQLAlchemy query."""
+        return cls.query.get(obj_id)
+    
     @classmethod
     def all_instances(cls):
-        """Retrieve all instances of the class."""
-        return list(cls._instances.values())
-
+        """Retrieve all instances using a SQLAlchemy query."""
+        return cls.query.all()
+    
     @classmethod
     def delete(cls, obj_id):
-        """Delete an instance by its ID, ensuring safe deletion."""
-        if obj_id in cls._instances:
-            del cls._instances[obj_id]
+        """Delete an instance by its ID and commit the deletion."""
+        obj = cls.get_by_id(obj_id)
+        if obj:
+            db.session.delete(obj)
+            db.session.commit()
             return True
-        return False  # Return False if object wasn't found
-
+        return False
+    
     def __repr__(self):
         return f"{self.__class__.__name__}(ID: {self.id}, Created: {self.created_at}, Updated: {self.updated_at})"
