@@ -1,15 +1,16 @@
+# app/api/v1/reviews.py
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services import facade
 
 ns = Namespace('reviews', description='Review operations')
 
-# Model for review creation
+# Model for creating a review.
 review_model = ns.model('Review', {
     'text': fields.String(required=True, description='Text of the review'),
     'rating': fields.Integer(required=True, description='Rating of the place (1-5)'),
     'place_id': fields.String(required=True, description='ID of the place')
-    # Note: user_id will be overridden by the authenticated user's id.
+    # user_id is not included; it will be set from the JWT.
 })
 
 # Model for updating a review (only text and rating can be updated)
@@ -39,16 +40,16 @@ class ReviewList(Resource):
         # Override user_id with the authenticated user's id
         review_data['user_id'] = current_user['id']
         
-        # Retrieve place details to verify ownership and existence
+        # Retrieve the place details to ensure it exists
         place = facade.get_place(review_data['place_id'])
         if not place:
             return {'error': 'Place not found'}, 404
         
-        # Check if the authenticated user is the owner of the place
+        # Prevent self-review: the user must not be the owner of the place.
         if place.get('owner', {}).get('id') == current_user['id']:
             return {'error': 'You cannot review your own place.'}, 400
         
-        # Check if the user has already reviewed this place
+        # Prevent duplicate reviews: ensure the user hasn't already reviewed this place.
         existing_reviews = facade.get_reviews_by_place(review_data['place_id'])
         for review in existing_reviews:
             if review.user.id == current_user['id']:
@@ -85,7 +86,6 @@ class ReviewResource(Resource):
         review = facade.get_review(review_id)
         if not review:
             return {"error": "Review not found"}, 404
-        
         return {
             "id": review.id,
             "text": review.text,
@@ -100,16 +100,16 @@ class ReviewResource(Resource):
     @ns.response(403, 'Unauthorized action')
     @ns.response(404, 'Review not found')
     def put(self, review_id):
-        """Update a review (protected: only the creator can update)"""
+        """Update a review (protected: only the creator can update)
+        
+        Ensures that the authenticated user is the creator of the review.
+        """
         current_user = get_jwt_identity()
         review = facade.get_review(review_id)
         if not review:
             return {"error": "Review not found"}, 404
-        
-        # Ensure that the review belongs to the current user
         if review.user.id != current_user['id']:
             return {"error": "Unauthorized action"}, 403
-        
         update_data = ns.payload
         try:
             updated_review = facade.update_review(review_id, update_data)
@@ -128,18 +128,18 @@ class ReviewResource(Resource):
     @ns.response(403, 'Unauthorized action')
     @ns.response(404, 'Review not found')
     def delete(self, review_id):
-        """Delete a review (protected: only the creator can delete)"""
+        """Delete a review (protected: only the creator can delete)
+        
+        Ensures that the authenticated user is the creator of the review.
+        """
         current_user = get_jwt_identity()
         review = facade.get_review(review_id)
         if not review:
             return {"error": "Review not found"}, 404
-        
-        # Ensure that the review belongs to the current user
         if review.user.id != current_user['id']:
             return {"error": "Unauthorized action"}, 403
-        
         deletion_result = facade.delete_review(review_id)
-        if deletion_result is not None:
+        if deletion_result:
             return {"message": "Review deleted successfully"}, 200
         else:
             return {"error": "Failed to delete review"}, 400
