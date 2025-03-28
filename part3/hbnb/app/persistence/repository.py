@@ -1,4 +1,3 @@
-# app/persistence/repository.py
 from abc import ABC, abstractmethod
 from app import db
 from app.models import User, Place, Review, Amenity

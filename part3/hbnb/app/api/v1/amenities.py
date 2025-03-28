@@ -1,4 +1,3 @@
-# app/api/v1/amenities.py
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required
 from app.services.facade import HBnBFacade

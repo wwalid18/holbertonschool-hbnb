@@ -1,4 +1,3 @@
-# app/services/facade.py
 from app.persistence.user_repository import UserRepository
 from app.persistence.repository import SQLAlchemyRepository
 from app.models.user import User

@@ -1,4 +1,3 @@
-# app/models/review.py
 from app.models.base_model import BaseModel
 from app import db
 

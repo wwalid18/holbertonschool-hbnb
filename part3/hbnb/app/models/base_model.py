@@ -1,4 +1,3 @@
-# app/models/base_model.py
 import uuid
 from datetime import datetime
 from app import db  # db is the SQLAlchemy instance from app/__init__.py

@@ -1,4 +1,3 @@
-# app/persistence/user_repository.py
 from app.persistence.repository import SQLAlchemyRepository
 from app.models.user import User
 from app import db

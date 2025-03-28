@@ -1,4 +1,3 @@
-# app/api/v1/auth.py
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import (
     create_access_token, jwt_required, get_jwt_identity, get_jwt
