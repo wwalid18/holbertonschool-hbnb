@@ -16,8 +16,8 @@ class Amenity(BaseModel):
     
     def to_dict(self):
         return {
-            "id": self.id,
-            "name": self.name
+            'id': self.id,
+            'name': self.name
         }
     
     def __repr__(self):

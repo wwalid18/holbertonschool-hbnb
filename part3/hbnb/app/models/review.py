@@ -10,21 +10,20 @@ class Review(BaseModel):
     user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
     place_id = db.Column(db.String(36), db.ForeignKey('places.id'), nullable=False)
     
-    # Relationships: backrefs are defined in User and Place models.
-    
     def __init__(self, text, rating, user, place):
-        super().__init__()
         if not text or not isinstance(text, str):
             raise ValueError("Review text is required and must be a string.")
         if not isinstance(rating, int) or rating < 1 or rating > 5:
             raise ValueError("Rating must be an integer between 1 and 5.")
-        if not user or not place:
-            raise ValueError("User and Place must be provided.")
+        if not user:
+            raise ValueError("User must be provided.")
+        if not place:
+            raise ValueError("Place must be provided.")
         self.text = text.strip()
         self.rating = rating
-        self.user = user
-        self.place = place
-
+        self.user = user   # User instance
+        self.place = place # Place instance
+    
     def to_dict(self):
         return {
             'id': self.id,
