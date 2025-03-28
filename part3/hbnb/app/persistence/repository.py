@@ -1,9 +1,8 @@
 # app/persistence/repository.py
 from abc import ABC, abstractmethod
 from app import db
-from app.models import User, Place, Review, Amenity  # Ensure your models are properly imported in app/models/__init__.py
+from app.models import User, Place, Review, Amenity
 
-# Abstract Repository Interface
 class Repository(ABC):
     @abstractmethod
     def add(self, obj):
@@ -29,7 +28,6 @@ class Repository(ABC):
     def get_by_attribute(self, attr_name, attr_value):
         pass
 
-# SQLAlchemy-based Repository Implementation
 class SQLAlchemyRepository(Repository):
     def __init__(self, model):
         self.model = model

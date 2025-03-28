@@ -1,5 +1,5 @@
 # app/models/user.py
-from app.models.base_model import BaseModel  # Import your BaseModel (updated for SQLAlchemy)
+from app.models.base_model import BaseModel
 from app import db, bcrypt
 
 class User(BaseModel):
@@ -11,8 +11,9 @@ class User(BaseModel):
     password = db.Column(db.String(128), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
     
-    # Relationship: one-to-many with Place (assuming a Place model exists)
+    # Relationships: A user can own many places and write many reviews.
     places = db.relationship('Place', backref='owner', lazy=True)
+    reviews = db.relationship('Review', backref='user', lazy=True)
     
     def __init__(self, first_name, last_name, email, password, is_admin=False):
         self.first_name = first_name.strip()
@@ -22,15 +23,12 @@ class User(BaseModel):
         self.is_admin = is_admin
 
     def hash_password(self, password):
-        """Hashes the password using bcrypt and stores the hashed password."""
         self.password = bcrypt.generate_password_hash(password).decode('utf-8')
 
     def verify_password(self, password):
-        """Verifies the provided password against the stored hashed password."""
         return bcrypt.check_password_hash(self.password, password)
     
     def to_dict(self):
-        """Converts the user instance to a dictionary (excluding the password)."""
         return {
             'id': self.id,
             'first_name': self.first_name,
