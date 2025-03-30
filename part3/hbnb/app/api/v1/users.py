@@ -26,8 +26,6 @@ admin_user_update_model = ns.model('AdminUserUpdate', {
 
 @ns.route('/')
 class UserList(Resource):
-    @jwt_required()
-    @admin_required
     @ns.expect(admin_user_registration_model, validate=True)
     @ns.response(200, 'User successfully registered')
     @ns.response(400, 'Invalid input data or email already registered')
