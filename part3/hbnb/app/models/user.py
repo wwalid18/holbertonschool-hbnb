@@ -1,3 +1,4 @@
+# app/models/user.py
 from app.models.base_model import BaseModel
 from app import db, bcrypt
 
@@ -10,7 +11,6 @@ class User(BaseModel):
     password = db.Column(db.String(128), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
     
-    # Relationships: A user can own many places and write many reviews.
     places = db.relationship('Place', backref='owner', lazy=True)
     reviews = db.relationship('Review', backref='user', lazy=True)
     

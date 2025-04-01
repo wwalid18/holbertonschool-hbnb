@@ -1,13 +1,14 @@
+# app/services/facade.py
 from app.persistence.user_repository import UserRepository
 from app.persistence.repository import SQLAlchemyRepository
 from app.models.user import User
 from app.models.place import Place
 from app.models.review import Review
 from app.models.amenity import Amenity
+from app import db
 
 class HBnBFacade:
     def __init__(self):
-        # Use the dedicated UserRepository for user-specific operations.
         self.user_repository = UserRepository()
         self.place_repository = SQLAlchemyRepository(Place)
         self.review_repository = SQLAlchemyRepository(Review)
@@ -15,18 +16,11 @@ class HBnBFacade:
     
     # --- User Methods ---
     def create_user(self, user_data):
-        """
-        Create a new user.
-        The User model automatically hashes the password in its constructor.
-        """
         user = User(**user_data)
         self.user_repository.add(user)
         return user
 
     def get_user_by_email(self, email):
-        """
-        Retrieve a user by email using the UserRepository's get_by_email method.
-        """
         return self.user_repository.get_by_email(email)
 
     def get_user_by_id(self, user_id):
@@ -43,9 +37,6 @@ class HBnBFacade:
         return updated_user
 
     def reset_user_password(self, email, new_password):
-        """
-        Reset a user's password by delegating to the UserRepository.
-        """
         return self.user_repository.reset_password(email, new_password)
 
     # --- Place Methods ---
@@ -127,11 +118,34 @@ class HBnBFacade:
         if not self.review_repository.delete(review_id):
             raise ValueError("Failed to delete review.")
         return True
+    def get_reviews_by_place(self, place_id):
+        # Option 1: Query directly using SQLAlchemy
+        return self.review_repository.model.query.filter(
+            self.review_repository.model.place_id == place_id
+        ).all()
 
     # --- Amenity Methods ---
     def create_amenity(self, amenity_data):
+        # Validate required fields:
+        required_fields = ['name', 'place_id']
+        for field in required_fields:
+            if field not in amenity_data or not amenity_data[field]:
+                raise ValueError(f"Missing required field: {field}")
+        
+        # Retrieve the Place using the provided place_id.
+        place = self.place_repository.get(amenity_data['place_id'])
+        if not place:
+            raise ValueError("Place not found.")
+        
+        # Create the Amenity instance using the provided name.
         amenity = Amenity(amenity_data['name'])
         self.amenity_repository.add(amenity)
+        
+        # Associate the new amenity with the Place.
+        # (This is similar to how reviews are created and linked to a Place.)
+        place.amenities.append(amenity)
+        db.session.commit()  # Commit the association
+        
         return amenity
 
     def update_amenity(self, amenity_id, data):

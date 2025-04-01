@@ -1,8 +1,9 @@
+# app/models/place.py
 from app.models.base_model import BaseModel
 from app import db
 
 # Association table for the many-to-many relationship between Place and Amenity
-place_amenity = db.Table('place_amenity',
+place_amenity = db.Table('Place_Amenity',
     db.Column('place_id', db.String(36), db.ForeignKey('Place.id'), primary_key=True),
     db.Column('amenity_id', db.String(36), db.ForeignKey('Amenity.id'), primary_key=True)
 )
@@ -18,10 +19,10 @@ class Place(BaseModel):
     owner_id = db.Column(db.String(36), db.ForeignKey('User.id'), nullable=False)
     
     # Relationships:
-    # One-to-many with Review; Place will have many reviews.
-    Review = db.relationship('Review', backref='place', lazy=True)
-    # Many-to-many with Amenity via the association table.
-    Amenity = db.relationship('Amenity', secondary=place_amenity, backref=db.backref('places', lazy=True))
+    # One-to-many: A Place can have many reviews.
+    reviews = db.relationship('Review', backref='place', lazy=True)
+    # Many-to-many: A Place can have many amenities via the association table.
+    amenities = db.relationship('Amenity', secondary=place_amenity, backref=db.backref('places', lazy=True))
     
     def __init__(self, title, description, price, latitude, longitude, owner):
         if not title or len(title) > 100:
@@ -41,7 +42,7 @@ class Place(BaseModel):
         self.price = float(price)
         self.latitude = latitude
         self.longitude = longitude
-        self.owner = owner  # The owner is a User instance.
+        self.owner = owner  # 'owner' is a User instance.
     
     def to_dict(self):
         return {
@@ -52,7 +53,8 @@ class Place(BaseModel):
             'latitude': self.latitude,
             'longitude': self.longitude,
             'owner': self.owner.to_dict() if self.owner else None,
-            'amenities': [amenity.to_dict() for amenity in self.amenities]
+            'amenities': [amenity.to_dict() for amenity in self.amenities if hasattr(amenity, 'to_dict')],
+            'reviews': [review.to_dict() for review in self.reviews if hasattr(review, 'to_dict')]
         }
     
     def __repr__(self):
