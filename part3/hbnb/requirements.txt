@@ -1,3 +1,6 @@
 flask
 flask-restx
 flask-bcrypt
+pymysql
+mysql-connector-python
+mysqlclient
