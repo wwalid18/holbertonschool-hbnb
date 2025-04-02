@@ -73,8 +73,8 @@ The HBNB API provides the following functionalities:
 ---
 
 ## **Installation and Usage**
- - pip install Flask Flask-RESTx
  - pip install -r requirements.txt
+ - source /home/walid/holbertonschool-hbnb/part3/hbnb/hbnb_schema.sql;
 
  ---
 
@@ -88,8 +88,11 @@ python3 run.py
  --- 
 
 ### **Authors**
- - Nour Kasmi https://github.com/Nourkasmi
- - Walid Chaouachi https://github.com/wwalid18
+This project is made by:
+
+- [![GitHub](https://img.shields.io/badge/GitHub-Nourkasmi-000000?style=flat&logo=github)](https://github.com/Nourkasmi)
+
+- [![GitHub](https://img.shields.io/badge/GitHub-wwalid18-000000?style=flat&logo=github)](https://github.com/wwalid18)
 
  ### **Entity-Relationship Diagram**
 <img src="db_diag.png" alt="follow this to understand relations between tables" width="500">
