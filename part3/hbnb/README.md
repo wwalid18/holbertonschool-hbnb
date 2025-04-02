@@ -92,4 +92,4 @@ python3 run.py
  - Walid Chaouachi https://github.com/wwalid18
 
  ### **Entity-Relationship Diagram**
-![follow this to understand relations between tables](db_diag.png)
+<img src="db_diag.png" alt="follow this to understand relations between tables" width="500">
