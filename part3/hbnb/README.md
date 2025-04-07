@@ -1,11 +1,21 @@
+<<<<<<< HEAD
 # **HBnB Project**
 
 ## **Description**
 HBnB is a RESTful API for an Airbnb-like application. It allows users to manage entities such as Users, Places, Reviews, and Amenities. The API uses JWT-based authentication and role-based access control to ensure secure operations. This project is part of the Holberton School curriculum.
+=======
+# **HBNB API - v1**
+
+## **Description**
+HBNB API is a RESTful API built using Flask and Flask-RESTx for the HBNB project. It provides endpoints to manage users, places, amenities, and reviews.
+
+This project is part of the Holberton School curriculum.
+>>>>>>> 5592a4f900611797c08927a08996b59175a6e040
 
 ---
 
 ## **Features**
+<<<<<<< HEAD
 The HBnB API supports the following functionalities:
 
 - **User Management:**
@@ -50,10 +60,28 @@ The HBnB API supports the following functionalities:
 
 - **ER Diagram:**
   - Mermaid.js diagrams visually represent the database schema and relationships.
+=======
+The HBNB API provides the following functionalities:
+
+- **Users Management**
+  - Create, retrieve, update, and delete users.
+
+- **Places Management**
+  - Create, retrieve, update, and delete places.
+  - Associate places with amenities.
+  - Retrieve reviews for places.
+
+- **Amenities Management**
+  - Create, retrieve, update, and delete amenities.
+
+- **Reviews Management**
+  - Create, retrieve, update, and delete reviews for places.
+>>>>>>> 5592a4f900611797c08927a08996b59175a6e040
 
 ---
 
 ## **How It Works**
+<<<<<<< HEAD
 1. **Authentication:**
    - Users log in via the `/api/v1/auth/login` endpoint and receive a JWT token that contains their user ID and admin status.
 2. **API Requests:**
@@ -62,11 +90,19 @@ The HBnB API supports the following functionalities:
    - The **HBnBFacade** (in `app/services/facade.py`) orchestrates operations and calls repository methods to interact with the MySQL database.
 4. **Response Serialization:**
    - Model instances are converted to plain dictionaries using their `to_dict()` methods before being returned as JSON.
+=======
+1. The API is structured using Flask-RESTx.
+2. Blueprints are used to organize endpoints (`/api/v1` prefix).
+3. Each resource (Users, Places, Amenities, Reviews) has its own namespace.
+4. A facade layer (`HBnBFacade`) handles business logic.
+5. Uses models for request validation.
+>>>>>>> 5592a4f900611797c08927a08996b59175a6e040
 
 ---
 
 ## **File Descriptions**
 
+<<<<<<< HEAD
 ### **app/__init__.py**
 - **Role:** Application factory that creates and configures the Flask app, initializes extensions (SQLAlchemy, JWT, Bcrypt, Migrate), and registers API namespaces.
 
@@ -122,3 +158,64 @@ To set up the HBnB project, follow these steps:
    ```bash
    git clone https://github.com/wwalid18/holbertonschool-hbnb.git
    cd holbertonschool-hbnb/part3/hbnb
+=======
+### **app/api/v1/__init__.py**
+- Initializes the API.
+- Registers namespaces for users, places, amenities, and reviews.
+
+### **app/api/v1/amenities.py**
+- Endpoints for managing amenities:
+  - `POST /api/v1/amenities/` - Create a new amenity.
+  - `GET /api/v1/amenities/` - Retrieve all amenities.
+  - `GET /api/v1/amenities/<amenity_id>` - Retrieve a specific amenity.
+  - `PUT /api/v1/amenities/<amenity_id>` - Update an amenity.
+
+### **app/api/v1/places.py**
+- Endpoints for managing places:
+  - `POST /api/v1/places/` - Create a new place.
+  - `GET /api/v1/places/` - Retrieve all places.
+  - `GET /api/v1/places/<place_id>` - Retrieve a specific place.
+  - `PUT /api/v1/places/<place_id>` - Update a place.
+  - `GET /api/v1/places/<place_id>/reviews` - Get all reviews for a place.
+
+### **app/api/v1/reviews.py**
+- Endpoints for managing reviews:
+  - `POST /api/v1/reviews/` - Create a new review.
+  - `GET /api/v1/reviews/` - Retrieve all reviews.
+  - `GET /api/v1/reviews/<review_id>` - Retrieve a specific review.
+  - `PUT /api/v1/reviews/<review_id>` - Update a review.
+
+---
+
+## **Requirements**
+- **Operating System**: Linux, macOS or Windows
+- **Programming Language**: Python3
+- **Framework**: Flask, Flask-RESTx
+
+---
+
+## **Installation and Usage**
+ - pip install -r requirements.txt
+ - source /home/walid/holbertonschool-hbnb/part3/hbnb/hbnb_schema.sql;
+
+ ---
+
+### **Clone the repository**
+```bash
+git clone https://github.com/wwalid18/holbertonschool-hbnb.git
+cd part2/Hbnb
+python3 run.py
+
+```
+ --- 
+
+### **Authors**
+This project is made by:
+
+- [![GitHub](https://img.shields.io/badge/GitHub-Nourkasmi-000000?style=flat&logo=github)](https://github.com/Nourkasmi)
+
+- [![GitHub](https://img.shields.io/badge/GitHub-wwalid18-000000?style=flat&logo=github)](https://github.com/wwalid18)
+
+ ### **Entity-Relationship Diagram**
+<img src="db_diag.png" alt="follow this to understand relations between tables" width="500">
+>>>>>>> 5592a4f900611797c08927a08996b59175a6e040

@@ -4,3 +4,7 @@ flask-bcrypt
 pymysql
 mysql-connector-python
 mysqlclient
+Werkzeug
+flask_sqlalchemy
+flask_migrate
+flask_jwt_extended
