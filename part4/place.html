@@ -7,23 +7,41 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Header Section with Logo and Navigation -->
+    <header>
+        <div class="logo">
+            <img src="logo.png" alt="Logo">
+        </div>
+        <nav>
+            <a href="index.html" class="login-button">Back to List</a>
+        </nav>
+    </header>
+    
+    <!-- Main Content for Place Details -->
     <main>
-        <section id="place-details">
+        <section id="place-details" class="place-details">
             <!-- Place details will be populated dynamically -->
         </section>
-        <section id="reviews">
+
+        <section id="reviews" class="reviews-section">
             <!-- Reviews will be populated dynamically -->
         </section>
-        <section id="add-review">
+
+        <section id="add-review" class="add-review-section">
             <h2>Add a Review</h2>
             <form id="review-form">
                 <label for="review-text">Review:</label>
                 <textarea id="review-text" name="review-text" required></textarea>
-                
                 <button type="submit">Submit</button>
             </form>
         </section>
     </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2025 All rights reserved.</p>
+    </footer>
+
     <script src="scripts.js"></script>
 </body>
 </html>

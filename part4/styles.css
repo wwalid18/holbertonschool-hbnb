@@ -1,8 +1,4 @@
-/* 
-  This is a SAMPLE File to get you started. Follow the instructions on the project to complete the tasks. 
-  You'll probably need to override some of theese styles.
-*/
-
+/* Universal Styles for all pages */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -10,15 +6,27 @@
     font-family: Arial, sans-serif;
 }
 
+/* Body styles */
 body {
     background-color: #f4f4f4;
     color: #333;
+    margin: 0;
 }
 
+/* Header Styles */
 header {
     background-color: #333;
     color: #fff;
     padding: 1rem;
+}
+
+header .logo img {
+    width: 100px;
+    height: auto;
+}
+
+nav {
+    float: right;
 }
 
 nav a {
@@ -27,6 +35,189 @@ nav a {
     margin-left: 1rem;
 }
 
+nav a:hover {
+    color: #ddd;
+}
+
+/* Main Content Styles */
 main {
     padding: 2rem;
+}
+
+/* Filter Section */
+#filter {
+    margin-bottom: 2rem;
+}
+
+#filter label {
+    font-size: 1.2rem;
+}
+
+#filter select {
+    padding: 5px;
+    font-size: 1rem;
+}
+
+/* Places List Styles */
+#places-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.place-card {
+    width: 250px;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.place-card:hover {
+    transform: scale(1.05);
+}
+
+.place-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.place-card .place-name {
+    font-size: 1.5rem;
+    margin: 1rem 0;
+}
+
+.place-card .price {
+    font-size: 1.2rem;
+    color: #28a745;
+    margin-bottom: 1rem;
+}
+
+.details-button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.details-button:hover {
+    background-color: #0056b3;
+}
+
+/* Place Details Section */
+#place-details {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+#place-details h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.place-details .place-info {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.place-info p {
+    margin: 0.5rem 0;
+}
+
+#reviews {
+    margin-top: 2rem;
+}
+
+.review-card {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.review-card .review-text {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.review-card .reviewer-name {
+    font-weight: bold;
+}
+
+.review-card .rating {
+    color: #f39c12;
+}
+
+/* Review Form Styles */
+#add-review {
+    margin-top: 2rem;
+}
+
+#add-review h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+#review-form label {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+#review-form textarea, #review-form select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
+
+#review-form button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#review-form button:hover {
+    background-color: #218838;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1rem;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 768px) {
+    #places-list {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .place-card {
+        width: 80%;
+    }
 }
