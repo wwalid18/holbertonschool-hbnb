@@ -5,35 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>List of Places</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
-    <!-- Header Section with Logo and Navigation -->
     <header>
-        <div class="logo">
-            <img src="images/logo.png" alt="Logo">
-        </div>
         <nav>
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Logo">
+            </a>
             <a href="login.html" class="login-button">Login</a>
         </nav>
     </header>
-    
-    <!-- Main Content -->
-    <main>
-        <section id="filter" class="filter-section">
-            <label for="price-filter">Max Price:</label>
-            <select id="price-filter">
-                <!-- Options will be populated dynamically -->
-            </select>
-        </section>
 
-        <section id="places-list" class="places-list">
-            <!-- List of places will be populated dynamically -->
+    <main>
+        <section id="places-list">
+            <h2>Available Places</h2>
+            <!-- Dynamically populated list of place cards -->
+            <div class="place-card">
+                <h3>Cozy Cottage</h3>
+                <p>Price per night: $75</p>
+                <button class="details-button" onclick="location.href='place.html'">View Details</button>
+            </div>
+
+            <div class="place-card">
+                <h3>Luxury Villa</h3>
+                <p>Price per night: $150</p>
+                <button class="details-button" onclick="location.href='place.html'">View Details</button>
+            </div>
         </section>
     </main>
-    
-    <!-- Footer Section -->
+
     <footer>
-        <p>&copy; 2025 All rights reserved.</p>
+        <p>&copy; 2025 All Rights Reserved</p>
     </footer>
 
     <script src="scripts.js"></script>
