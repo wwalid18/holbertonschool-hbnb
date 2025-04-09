@@ -1,115 +1,176 @@
-/* Reset default margins and paddings */
+/* Reset default styles */
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Roboto', sans-serif; /* Using Roboto font */
+    box-sizing: border-box;
 }
 
-/* Body style */
 body {
-    background-color: #F8F9FA; /* Light background */
-    color: #333;
-    font-family: 'Roboto', sans-serif;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f5f5f5;
 }
 
-/* Header style */
 header {
-    background-color: #007BFF; /* Primary color */
-    color: #fff;
+    background-color: #ff6200;
     padding: 1rem;
 }
 
-/* Navigation links in header */
-nav a {
-    color: #fff;
-    text-decoration: none;
-    margin-left: 1rem;
-    font-weight: bold;
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* Main content area */
+.logo img {
+    height: 40px; /* Adjust based on your logo size */
+}
+
+.login-button {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.login-button:hover {
+    text-decoration: underline;
+}
+
 main {
     padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-/* Styling for place and review cards */
-.place-card, .review-card {
-    margin: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: #fff;
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
 }
 
-/* Card content style */
-.place-card h3, .review-card h4 {
-    margin-bottom: 10px;
+h3 {
     font-size: 1.2rem;
+    margin-bottom: 0.5rem;
 }
 
-.place-card .price, .review-card .rating {
-    font-size: 1rem;
-    color: #6C757D; /* Secondary color for price and rating */
+.filter {
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
-/* Details button */
+.filter label {
+    margin-right: 0.5rem;
+    font-weight: bold;
+}
+
+.filter select {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.places {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.place-card {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    flex: 1;
+}
+
+.place-card h3 {
+    margin-bottom: 0.5rem;
+}
+
+.place-card p {
+    margin-bottom: 1rem;
+}
+
+.place-info {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.place-info p {
+    margin-bottom: 0.5rem;
+}
+
+#reviews h3 {
+    margin-top: 2rem;
+}
+
+.review-card {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+}
+
+.review-card p {
+    margin-bottom: 0.5rem;
+}
+
+.form-container {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: bold;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+textarea {
+    height: 100px;
+    resize: none;
+}
+
 .details-button {
-    background-color: #007BFF; /* Primary color */
-    color: #fff;
+    display: inline-block;
+    background-color: #ff6200;
+    color: white;
+    padding: 0.5rem 1rem;
     border: none;
-    padding: 8px 16px;
     border-radius: 5px;
     text-decoration: none;
-    font-weight: bold;
+    text-align: center;
+    margin-top: 1rem;
+    cursor: pointer;
+    font-size: 1rem;
 }
 
 .details-button:hover {
-    background-color: #0056b3; /* Darker shade for hover */
+    background-color: #e55a00;
 }
 
-/* Footer */
 footer {
-    background-color: #007BFF;
+    background-color: #ff6200;
     color: white;
     text-align: center;
     padding: 1rem;
-    position: absolute;
-    width: 100%;
+    position: fixed;
     bottom: 0;
-}
-
-/* Form and button styling for reviews */
-button, input[type="submit"] {
-    background-color: #28A745; /* Accent color */
-    color: #fff;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover, input[type="submit"]:hover {
-    background-color: #218838; /* Darker green for hover */
-}
-
-/* Review form input fields */
-textarea, select {
     width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-top: 10px;
-}
-
-/* Price filter dropdown */
-#price-filter {
-    padding: 8px;
-    margin-top: 10px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-}
-
-#filter {
-    margin-bottom: 20px;
 }

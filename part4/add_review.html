@@ -8,24 +8,37 @@
     <link rel="icon" href="images/icon.png" type="image/x-icon">
 </head>
 <body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="Logo">
+            </a>
+            <a href="login.html" class="login-button">Login</a>
+        </nav>
+    </header>
+
     <main>
-        <!-- Add something to identify the place you're reviewing -->
-        <form id="review-form">
-            <h2>Add a Review</h2>
+        <h2>Reviewing: Cozy Cottage</h2>
+        <form id="review-form" class="form-container">
+            <h3>Add a Review</h3>
             <label for="review">Your Review:</label>
             <textarea id="review" name="review" required></textarea>
             <label for="rating">Rating:</label>
             <select id="rating" name="rating" required>
-                <!-- Options for rating -->
                 <option value="1">1 Star</option>
                 <option value="2">2 Stars</option>
                 <option value="3">3 Stars</option>
                 <option value="4">4 Stars</option>
                 <option value="5">5 Stars</option>
             </select>
-            <button type="submit">Submit Review</button>
+            <button type="submit" class="details-button">Submit Review</button>
         </form>
     </main>
+
+    <footer>
+        <p>© 2025 All Rights Reserved</p>
+    </footer>
+
     <script src="scripts.js"></script>
 </body>
 </html>

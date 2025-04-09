@@ -20,23 +20,31 @@
     <main>
         <section id="places-list">
             <h2>Available Places</h2>
-            <!-- Dynamically populated list of place cards -->
-            <div class="place-card">
-                <h3>El Agba</h3>
-                <p>Price per night: $1100</p>
-                <button class="details-button" onclick="location.href='place.html'">View Details</button>
+            <div class="filter">
+                <label for="max-price">Max Price:</label>
+                <select id="max-price" name="max-price">
+                    <option value="all">All</option>
+                    <option value="150">$150</option>
+                    <option value="1100">$1100</option>
+                </select>
             </div>
-
-            <div class="place-card">
-                <h3>El kef</h3>
-                <p>Price per night: $150</p>
-                <button class="details-button" onclick="location.href='place.html'">View Details</button>
+            <div class="places">
+                <div class="place-card">
+                    <h3>El Agba</h3>
+                    <p>Price per night: $1100</p>
+                    <button class="details-button" onclick="location.href='place.html'">View Details</button>
+                </div>
+                <div class="place-card">
+                    <h3>El Kef</h3>
+                    <p>Price per night: $150</p>
+                    <button class="details-button" onclick="location.href='place.html'">View Details</button>
+                </div>
             </div>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2025 All Rights Reserved</p>
+        <p>© 2025 All Rights Reserved</p>
     </footer>
 
     <script src="scripts.js"></script>

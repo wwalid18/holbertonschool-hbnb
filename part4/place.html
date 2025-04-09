@@ -30,27 +30,23 @@
 
         <section id="reviews">
             <h3>Reviews</h3>
-            <!-- Dynamically populated reviews -->
             <div class="review-card">
-                <p><strong>User:</strong> Jane Smith</p>
-                <p><strong>Rating:</strong> 5 stars</p>
-                <p><strong>Comment:</strong> Amazing stay! Highly recommend! but walid's feet smell so bad</p>
+                <p><strong>Jane Smith:</strong></p>
+                <p>Amazing stay! Highly recommend! but walid's feet smell so bad</p>
+                <p><strong>Rating:</strong> ★★★★★</p>
             </div>
-
             <div class="review-card">
-                <p><strong>User:</strong> Nour Kasmi</p>
-                <p><strong>Rating:</strong> 4 stars</p>
-                <p><strong>Comment:</strong> Very cozy, but they have no acces to water</p>
+                <p><strong>Nour Kasmi:</strong></p>
+                <p>Very cozy, but they have no access to water</p>
+                <p><strong>Rating:</strong> ★★★★☆</p>
             </div>
         </section>
 
         <section id="add-review">
             <h2>Add a Review</h2>
-            <!-- Only shown if user is logged in -->
-            <form id="review-form">
-                <label for="review-text">Review:</label>
+            <form id="review-form" class="form-container">
+                <label for="review-text">Your Review:</label>
                 <textarea id="review-text" name="review-text" required></textarea>
-
                 <label for="rating">Rating:</label>
                 <select id="rating" name="rating" required>
                     <option value="1">1 Star</option>
@@ -59,14 +55,13 @@
                     <option value="4">4 Stars</option>
                     <option value="5">5 Stars</option>
                 </select>
-
-                <button type="submit">Submit Review</button>
+                <button type="submit" class="details-button">Submit Review</button>
             </form>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2025 All Rights Reserved</p>
+        <p>© 2025 All Rights Reserved</p>
     </footer>
 
     <script src="scripts.js"></script>
