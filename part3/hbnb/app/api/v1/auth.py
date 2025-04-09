@@ -5,6 +5,7 @@ from flask_jwt_extended import (
 from flask import request, jsonify
 from app.services.facade import HBnBFacade
 
+
 ns = Namespace('auth', description='Authentication operations')
 
 # Model for login input validation

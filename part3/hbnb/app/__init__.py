@@ -1,9 +1,17 @@
+# part3/hbnb/app/__init__.py
+
+import os
+import sys
 from flask import Flask, jsonify
 from flask_restx import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS  # Add CORS import
+
+# Add the project root to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -17,7 +25,9 @@ def create_app(config_class="config.DevelopmentConfig"):
     db.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)  # Register JWT middleware with the app
-    migrate = Migrate(app, db)
+    
+    # Configure CORS to allow requests from the front-end
+    CORS(app, resources={r"/api/v1/*": {"origins": "http://127.0.0.1:5500"}})
     
     @app.route('/')
     def home():
@@ -47,5 +57,7 @@ def create_app(config_class="config.DevelopmentConfig"):
     api.add_namespace(amenity_namespace, path='/api/v1/amenities')
     api.add_namespace(review_namespace, path='/api/v1/reviews')
     api.add_namespace(auth_namespace, path='/api/v1/auth')
+    
+
     
     return app
