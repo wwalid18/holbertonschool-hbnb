@@ -1,0 +1,115 @@
+/* Reset default margins and paddings */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif; /* Using Roboto font */
+}
+
+/* Body style */
+body {
+    background-color: #F8F9FA; /* Light background */
+    color: #333;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Header style */
+header {
+    background-color: #007BFF; /* Primary color */
+    color: #fff;
+    padding: 1rem;
+}
+
+/* Navigation links in header */
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 1rem;
+    font-weight: bold;
+}
+
+/* Main content area */
+main {
+    padding: 2rem;
+}
+
+/* Styling for place and review cards */
+.place-card, .review-card {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+/* Card content style */
+.place-card h3, .review-card h4 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.place-card .price, .review-card .rating {
+    font-size: 1rem;
+    color: #6C757D; /* Secondary color for price and rating */
+}
+
+/* Details button */
+.details-button {
+    background-color: #007BFF; /* Primary color */
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.details-button:hover {
+    background-color: #0056b3; /* Darker shade for hover */
+}
+
+/* Footer */
+footer {
+    background-color: #007BFF;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+}
+
+/* Form and button styling for reviews */
+button, input[type="submit"] {
+    background-color: #28A745; /* Accent color */
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover, input[type="submit"]:hover {
+    background-color: #218838; /* Darker green for hover */
+}
+
+/* Review form input fields */
+textarea, select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+/* Price filter dropdown */
+#price-filter {
+    padding: 8px;
+    margin-top: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+#filter {
+    margin-bottom: 20px;
+}

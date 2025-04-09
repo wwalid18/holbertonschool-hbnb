@@ -1,6 +1,6 @@
 -- Create the database
-CREATE DATABASE IF NOT EXISTS hbnb;
-USE hbnb;
+CREATE DATABASE IF NOT EXISTS dbb;
+USE dbb;
 
 -- Create the User table
 CREATE TABLE IF NOT EXISTS User (

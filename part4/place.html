@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Details</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="images/icon.png" type="image/x-icon">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="Logo">
+            </a>
+            <a href="login.html" class="login-button">Login</a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="place-details">
+            <h2>Cozy Cottage</h2>
+            <div class="place-info">
+                <p><strong>Host:</strong> Walid Chaouachi</p>
+                <p><strong>Price per night:</strong> $100</p>
+                <p><strong>Description:</strong> A charming cottage in El Agba, perfect if you want to get robed.</p>
+                <p><strong>Amenities:</strong> Wi-Fi, Pool, Parking, Air Conditioning</p>
+            </div>
+        </section>
+
+        <section id="reviews">
+            <h3>Reviews</h3>
+            <!-- Dynamically populated reviews -->
+            <div class="review-card">
+                <p><strong>User:</strong> Jane Smith</p>
+                <p><strong>Rating:</strong> 5 stars</p>
+                <p><strong>Comment:</strong> Amazing stay! Highly recommend! but walid's feet smell so bad</p>
+            </div>
+
+            <div class="review-card">
+                <p><strong>User:</strong> Nour Kasmi</p>
+                <p><strong>Rating:</strong> 4 stars</p>
+                <p><strong>Comment:</strong> Very cozy, but they have no acces to water</p>
+            </div>
+        </section>
+
+        <section id="add-review">
+            <h2>Add a Review</h2>
+            <!-- Only shown if user is logged in -->
+            <form id="review-form">
+                <label for="review-text">Review:</label>
+                <textarea id="review-text" name="review-text" required></textarea>
+
+                <label for="rating">Rating:</label>
+                <select id="rating" name="rating" required>
+                    <option value="1">1 Star</option>
+                    <option value="2">2 Stars</option>
+                    <option value="3">3 Stars</option>
+                    <option value="4">4 Stars</option>
+                    <option value="5">5 Stars</option>
+                </select>
+
+                <button type="submit">Submit Review</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 All Rights Reserved</p>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
