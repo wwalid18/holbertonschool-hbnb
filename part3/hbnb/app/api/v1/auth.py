@@ -26,7 +26,10 @@ class Login(Resource):
         if not user or not user.verify_password(credentials['password']):
             ns.abort(401, "Invalid credentials")
         # Generate JWT token including the user's id and is_admin flag
-        access_token = create_access_token(identity={'id': str(user.id), 'is_admin': user.is_admin})
+        access_token = create_access_token(
+            identity=str(user.id),  # ✅ sub is now a string
+            additional_claims={'is_admin': user.is_admin}  # ✅ admin flag goes here
+        )
         return {'access_token': access_token}, 200
 
 # Model for password reset input validation

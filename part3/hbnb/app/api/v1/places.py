@@ -1,6 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services.facade import HBnBFacade
+from flask_jwt_extended import get_jwt
 
 ns = Namespace('places', description='Place operations')
 
@@ -82,8 +83,10 @@ class PlaceResource(Resource):
         if not existing_place:
             return {'error': 'Place not found'}, 404
 
-        # Non-admin users must be the owner of the place.
-        if not current_user.get('is_admin'):
+        claims = get_jwt()
+
+        # Now check if 'is_admin' exists in the claims
+        if not claims.get('is_admin'):
             if existing_place.get('owner', {}).get('id') != current_user['id']:
                 return {'error': 'Unauthorized action'}, 403
 
@@ -110,9 +113,9 @@ class PlaceResource(Resource):
         existing_place = facade.get_place(place_id)
         if not existing_place:
             return {'error': 'Place not found'}, 404
-
+        claims = get_jwt()
         # Non-admin users must be the owner of the place to delete it.
-        if not current_user.get('is_admin'):
+        if not claims.get('is_admin'):
             if existing_place.get('owner', {}).get('id') != current_user['id']:
                 return {'error': 'Unauthorized action'}, 403
 

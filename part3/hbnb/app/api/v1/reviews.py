@@ -1,6 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services.facade import HBnBFacade
+from flask_jwt_extended import get_jwt
 
 ns = Namespace('reviews', description='Review operations')
 
@@ -92,9 +93,10 @@ class ReviewResource(Resource):
         current_user = get_jwt_identity()
         facade = HBnBFacade()
         review = facade.get_review(review_id)
+        claims = get_jwt()
         if not review:
             return {'error': 'Review not found'}, 404
-        if not current_user.get('is_admin') and review.user.id != current_user['id']:
+        if not claims.get('is_admin') and review.user.id != current_user['id']:
             return {'error': 'Unauthorized action'}, 403
         update_data = ns.payload
         try:
@@ -118,12 +120,13 @@ class ReviewResource(Resource):
         - Regular users can only delete their own review.
         - Admins can delete any review.
         """
+        claims = get_jwt()
         current_user = get_jwt_identity()
         facade = HBnBFacade()
         review = facade.get_review(review_id)
         if not review:
             return {'error': 'Review not found'}, 404
-        if not current_user.get('is_admin') and review.user.id != current_user['id']:
+        if not claims.get('is_admin') and review.user.id != current_user['id']:
             return {'error': 'Unauthorized action'}, 403
         deletion_result = facade.delete_review(review_id)
         if deletion_result:
