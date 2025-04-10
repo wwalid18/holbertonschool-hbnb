@@ -27,7 +27,11 @@ def create_app(config_class="config.DevelopmentConfig"):
     jwt.init_app(app)  # Register JWT middleware with the app
     
     # Configure CORS to allow requests from the front-end
-    CORS(app, resources={r"/api/v1/*": {"origins": "http://127.0.0.1:5500"}})
+    CORS(app, resources={
+        r"/api/v1/*": {
+            "origins": "http://127.0.0.1:5500"
+        }
+    }, supports_credentials=True)
     
     @app.route('/')
     def home():
