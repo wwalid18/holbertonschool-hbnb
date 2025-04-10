@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   // -------------------------------------
   // Utility Function: Get Cookie by Name
-  // (You can reuse this from auth.js if you modularize further, but included here for independence.)
+  // (Reproduced here for independence)
   // -------------------------------------
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;
@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // -----------------------------------------------------------
   const placesSection = document.getElementById('places-list');
   if (placesSection) {
-    // Create a container element inside #places-list if not already present.
     let placesContainer = document.getElementById('places-container');
     if (!placesContainer) {
       placesContainer = document.createElement('div');
@@ -26,10 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
       placesSection.appendChild(placesContainer);
     }
     
-    // Global variable to store all fetched places.
     let allPlaces = [];
 
-    // Function to fetch places from the API, including the JWT token if available.
+    // NOTE: Updated URL now includes a trailing slash to prevent redirects.
     async function fetchPlaces() {
       const token = getCookie('token');
       const headers = { 'Content-Type': 'application/json' };
@@ -37,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         headers['Authorization'] = `Bearer ${token}`;
       }
       try {
-        const response = await fetch('http://localhost:5000/api/v1/places', {
+        const response = await fetch('http://localhost:5000/api/v1/places/', {
           method: 'GET',
           headers: headers
         });
@@ -45,22 +43,19 @@ document.addEventListener('DOMContentLoaded', () => {
           throw new Error('Failed to fetch places');
         }
         const data = await response.json();
+        console.log('[Places] Fetched places:', data);
         return data; // Expected to be an array of place objects.
       } catch (error) {
-        console.error('Error fetching places:', error);
+        console.error('[Places] Error fetching places:', error);
         return [];
       }
     }
 
-    // Function to dynamically render place cards into the places container.
     function renderPlaces(places) {
-      // Clear any existing content.
       placesContainer.innerHTML = '';
       places.forEach(place => {
-        // Create a card element for the place.
         const card = document.createElement('div');
         card.classList.add('place-card');
-        // Set a data attribute for price (for filtering).
         card.setAttribute('data-price', place.price);
         card.innerHTML = `
           <h3>${place.title}</h3>
@@ -73,7 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // Initialize the page by fetching and rendering the list of places.
     async function initializePlaces() {
       allPlaces = await fetchPlaces();
       renderPlaces(allPlaces);
@@ -83,12 +77,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // -----------------------------------------------------------
     // Client-Side Filtering by Price Using element.style.display
     // -----------------------------------------------------------
-    // The dropdown should be loaded with the following options: 10, 50, 100, All.
+    // Expected dropdown options: 10, 50, 100, All.
     const filterSelect = document.getElementById('max-price');
     if (filterSelect) {
       filterSelect.addEventListener('change', () => {
-        const selectedValue = filterSelect.value; // Expected values: "10", "50", "100", or "All"
-        // Get all the place card elements.
+        const selectedValue = filterSelect.value;
+        console.log('[Places] Filter selected:', selectedValue);
         const placeCards = document.querySelectorAll('.place-card');
         placeCards.forEach(card => {
           const price = parseFloat(card.getAttribute('data-price'));
