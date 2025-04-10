@@ -1,12 +1,10 @@
 from flask_restx import Namespace, Resource, fields
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt
 from app.services.facade import HBnBFacade
-from flask_jwt_extended import get_jwt
 
 ns = Namespace('places', description='Place operations')
 
 # Model for creating a place.
-# Note: owner_id in the payload will be overridden by the authenticated user's id.
 place_model = ns.model('Place', {
     'title': fields.String(required=True, description='Title of the place'),
     'description': fields.String(description='Description of the place'),
@@ -31,7 +29,6 @@ update_place_model = ns.model('UpdatePlace', {
 class PlaceList(Resource):
     @ns.response(200, 'List of places retrieved successfully')
     def get(self):
-        """Retrieve a list of all places (public endpoint)"""
         facade = HBnBFacade()
         places = facade.get_all_places()
         return places, 200
@@ -41,12 +38,15 @@ class PlaceList(Resource):
     @ns.response(201, 'Place successfully created')
     @ns.response(400, 'Invalid input data')
     def post(self):
-        """Create a new place (protected: owner_id is set to the authenticated user's id)"""
-        current_user = get_jwt_identity()  # Retrieve authenticated user's identity
+        claims = get_jwt()
         facade = HBnBFacade()
         place_data = ns.payload
-        # Override owner_id with the authenticated user's id
-        place_data['owner_id'] = current_user['id']
+
+        if 'sub' in claims:
+            place_data['owner_id'] = claims['sub']
+        else:
+            return {'error': 'Owner ID not found in token claims'}, 400
+
         try:
             new_place = facade.create_place(place_data)
             return new_place, 201
@@ -58,7 +58,6 @@ class PlaceResource(Resource):
     @ns.response(200, 'Place details retrieved successfully')
     @ns.response(404, 'Place not found')
     def get(self, place_id):
-        """Get place details by ID (public endpoint)"""
         facade = HBnBFacade()
         place = facade.get_place(place_id)
         if not place:
@@ -71,23 +70,14 @@ class PlaceResource(Resource):
     @ns.response(403, 'Unauthorized action')
     @ns.response(404, 'Place not found')
     def put(self, place_id):
-        """
-        Update a place's information.
-        
-        - If the authenticated user is an admin, bypass the ownership check.
-        - If not an admin, the user must be the owner of the place.
-        """
-        current_user = get_jwt_identity()
+        claims = get_jwt()
         facade = HBnBFacade()
         existing_place = facade.get_place(place_id)
         if not existing_place:
             return {'error': 'Place not found'}, 404
 
-        claims = get_jwt()
-
-        # Now check if 'is_admin' exists in the claims
         if not claims.get('is_admin'):
-            if existing_place.get('owner', {}).get('id') != current_user['id']:
+            if existing_place.get('owner', {}).get('id') != claims.get('sub'):
                 return {'error': 'Unauthorized action'}, 403
 
         update_data = ns.payload
@@ -102,21 +92,14 @@ class PlaceResource(Resource):
     @ns.response(403, 'Unauthorized action')
     @ns.response(404, 'Place not found')
     def delete(self, place_id):
-        """
-        Delete a place.
-        
-        - Admins can delete any place.
-        - Non-admins can only delete their own place.
-        """
-        current_user = get_jwt_identity()
+        claims = get_jwt()
         facade = HBnBFacade()
         existing_place = facade.get_place(place_id)
         if not existing_place:
             return {'error': 'Place not found'}, 404
-        claims = get_jwt()
-        # Non-admin users must be the owner of the place to delete it.
+
         if not claims.get('is_admin'):
-            if existing_place.get('owner', {}).get('id') != current_user['id']:
+            if existing_place.get('owner', {}).get('id') != claims.get('sub'):
                 return {'error': 'Unauthorized action'}, 403
 
         deletion_result = facade.place_repository.delete(place_id)

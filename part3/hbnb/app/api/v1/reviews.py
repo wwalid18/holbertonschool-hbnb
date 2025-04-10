@@ -1,7 +1,6 @@
 from flask_restx import Namespace, Resource, fields
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt
 from app.services.facade import HBnBFacade
-from flask_jwt_extended import get_jwt
 
 ns = Namespace('reviews', description='Review operations')
 
@@ -23,20 +22,24 @@ class ReviewList(Resource):
     @ns.response(201, 'Review successfully created')
     @ns.response(400, 'Invalid input data or review not allowed')
     def post(self):
-        """Create a new review (authenticated users) with validations for self-review and duplicate reviews."""
-        current_user = get_jwt_identity()
+        claims = get_jwt()
         review_data = ns.payload
-        review_data['user_id'] = current_user['id']
+
+        if 'sub' in claims:
+            review_data['user_id'] = claims['sub']
+        else:
+            return {'error': 'User ID not found in token claims'}, 400
 
         facade = HBnBFacade()
         place = facade.get_place(review_data['place_id'])
         if not place:
             return {'error': 'Place not found'}, 404
-        if place.get('owner', {}).get('id') == current_user['id']:
+        if place.get('owner', {}).get('id') == claims['sub']:
             return {'error': 'You cannot review your own place.'}, 400
+
         existing_reviews = facade.get_reviews_by_place(review_data['place_id'])
         for review in existing_reviews:
-            if review.user.id == current_user['id']:
+            if review.user.id == claims['sub']:
                 return {'error': 'You have already reviewed this place.'}, 400
 
         try:
@@ -53,7 +56,6 @@ class ReviewList(Resource):
 
     @ns.response(200, 'List of reviews retrieved successfully')
     def get(self):
-        """Retrieve a list of all reviews (public endpoint)."""
         facade = HBnBFacade()
         reviews = facade.get_all_reviews()
         return [{
@@ -67,7 +69,6 @@ class ReviewResource(Resource):
     @ns.response(200, 'Review details retrieved successfully')
     @ns.response(404, 'Review not found')
     def get(self, review_id):
-        """Get review details by ID (public endpoint)."""
         facade = HBnBFacade()
         review = facade.get_review(review_id)
         if not review:
@@ -86,17 +87,12 @@ class ReviewResource(Resource):
     @ns.response(403, 'Unauthorized action')
     @ns.response(404, 'Review not found')
     def put(self, review_id):
-        """Update a review.
-        - Regular users can only update their own review.
-        - Admins can update any review.
-        """
-        current_user = get_jwt_identity()
+        claims = get_jwt()
         facade = HBnBFacade()
         review = facade.get_review(review_id)
-        claims = get_jwt()
         if not review:
             return {'error': 'Review not found'}, 404
-        if not claims.get('is_admin') and review.user.id != current_user['id']:
+        if not claims.get('is_admin') and review.user.id != claims.get('sub'):
             return {'error': 'Unauthorized action'}, 403
         update_data = ns.payload
         try:
@@ -116,17 +112,12 @@ class ReviewResource(Resource):
     @ns.response(403, 'Unauthorized action')
     @ns.response(404, 'Review not found')
     def delete(self, review_id):
-        """Delete a review.
-        - Regular users can only delete their own review.
-        - Admins can delete any review.
-        """
         claims = get_jwt()
-        current_user = get_jwt_identity()
         facade = HBnBFacade()
         review = facade.get_review(review_id)
         if not review:
             return {'error': 'Review not found'}, 404
-        if not claims.get('is_admin') and review.user.id != current_user['id']:
+        if not claims.get('is_admin') and review.user.id != claims.get('sub'):
             return {'error': 'Unauthorized action'}, 403
         deletion_result = facade.delete_review(review_id)
         if deletion_result:
