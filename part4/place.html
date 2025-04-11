@@ -26,6 +26,15 @@
                 <p><strong>Price per night:</strong> $<span id="place-price">Loading...</span></p>
                 <p><strong>Description:</strong> <span id="place-description">Loading...</span></p>
                 <p><strong>Amenities:</strong> <span id="place-amenities">Loading...</span></p>
+                <button id="toggle-amenity-form" class="details-button">Add Amenity</button>
+                <!-- Add Amenity Form (hidden by default) -->
+                <div id="add-amenity" style="display: none;">
+                  <form id="amenity-form" class="form-container">
+                    <label for="amenity-name">Amenity Name:</label>
+                    <input type="text" id="amenity-name" name="amenity-name" required>
+                    <button type="submit" class="details-button">Submit Amenity</button>
+                  </form>
+                </div>
             </div>
             <div id="error-message" style="color: red; display: none;"></div>
         </section>
@@ -45,5 +54,6 @@
     </footer>
     <script src="auth.js"></script>
     <script src="place.js"></script>
+    <script src="amenity.js"></script>
 </body>
 </html>
