@@ -1,3 +1,4 @@
+<!-- part4/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,6 +22,9 @@
   </header>
 
   <main>
+    <!-- Error message display -->
+    <div id="error-message" style="color: red; display: none; margin-bottom: 20px; text-align: center;"></div>
+
     <!-- Price Filter Dropdown -->
     <section class="filter">
       <label for="max-price">Filter by Maximum Price:</label>
@@ -35,16 +39,16 @@
     <!-- Places List Section -->
     <section id="places-list">
       <h2>Available Places</h2>
-      <!-- The places-container will be created and populated by places.js -->
+      <!-- The places-container will be created and populated by index.js -->
     </section>
   </main>
 
-  <footer>
+  <footer id="site-footer">
     <p>© 2025 All Rights Reserved</p>
   </footer>
 
   <!-- Include the authentication and places scripts -->
   <script src="auth.js"></script>
-  <script src="places.js"></script>
+  <script src="index.js"></script>
 </body>
 </html>

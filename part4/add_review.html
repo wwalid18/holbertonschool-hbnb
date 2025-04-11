@@ -1,3 +1,4 @@
+<!-- part4/add_review.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,32 +14,34 @@
             <a href="index.html" class="logo">
                 <img src="images/logo.png" alt="Logo">
             </a>
-            <a href="login.html" class="login-button">Login</a>
+            <a href="login.html" id="auth-link" class="login-button">Login</a>
         </nav>
     </header>
 
     <main>
-        <h2>Reviewing: Cozy Cottage</h2>
-        <form id="review-form" class="form-container">
-            <h3>Add a Review</h3>
-            <label for="review">Your Review:</label>
-            <textarea id="review" name="review" required></textarea>
-            <label for="rating">Rating:</label>
-            <select id="rating" name="rating" required>
-                <option value="1">1 Star</option>
-                <option value="2">2 Stars</option>
-                <option value="3">3 Stars</option>
-                <option value="4">4 Stars</option>
-                <option value="5">5 Stars</option>
-            </select>
-            <button type="submit" class="details-button">Submit Review</button>
-        </form>
+        <section id="add-review">
+            <h2>Add a Review</h2>
+            <div id="message" style="display: none; margin-bottom: 20px; text-align: center;"></div>
+            <form id="review-form" class="form-container">
+                <label for="review-text">Your Review:</label>
+                <textarea id="review-text" name="review-text" required></textarea>
+                <label for="rating">Rating:</label>
+                <select id="rating" name="rating" required>
+                    <option value="1">1 Star</option>
+                    <option value="2">2 Stars</option>
+                    <option value="3">3 Stars</option>
+                    <option value="4">4 Stars</option>
+                    <option value="5">5 Stars</option>
+                </select>
+                <button type="submit" class="details-button">Submit Review</button>
+            </form>
+        </section>
     </main>
 
-    <footer>
+    <footer id="site-footer">
         <p>© 2025 All Rights Reserved</p>
     </footer>
-
-    <script src="scripts.js"></script>
+    <script src="auth.js"></script>
+    <script src="add_review.js"></script>
 </body>
 </html>

@@ -1,8 +1,10 @@
-// places.js
+// part4/index.js
+
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('[Index] DOMContentLoaded event fired');
+
   // -------------------------------------
   // Utility Function: Get Cookie by Name
-  // (Reproduced here for independence)
   // -------------------------------------
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;
@@ -11,6 +13,24 @@ document.addEventListener('DOMContentLoaded', () => {
       return parts.pop().split(';').shift();
     }
     return null;
+  };
+
+  // -------------------------------------
+  // Display Error Message from localStorage
+  // -------------------------------------
+  const displayErrorMessage = () => {
+    const errorMessageDiv = document.getElementById('error-message');
+    const errorMessage = localStorage.getItem('errorMessage');
+    if (errorMessage && errorMessageDiv) {
+      errorMessageDiv.textContent = errorMessage;
+      errorMessageDiv.style.display = 'block';
+      // Clear the error message from localStorage after displaying it
+      localStorage.removeItem('errorMessage');
+      // Hide the message after 5 seconds
+      setTimeout(() => {
+        errorMessageDiv.style.display = 'none';
+      }, 5000);
+    }
   };
 
   // -----------------------------------------------------------
@@ -27,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let allPlaces = [];
 
-    // NOTE: Updated URL now includes a trailing slash to prevent redirects.
+    // NOTE: URL includes a trailing slash to prevent redirects.
     async function fetchPlaces() {
       const token = getCookie('token');
       const headers = { 'Content-Type': 'application/json' };
@@ -43,24 +63,33 @@ document.addEventListener('DOMContentLoaded', () => {
           throw new Error('Failed to fetch places');
         }
         const data = await response.json();
-        console.log('[Places] Fetched places:', data);
+        console.log('[Index] Fetched places:', data);
         return data; // Expected to be an array of place objects.
       } catch (error) {
-        console.error('[Places] Error fetching places:', error);
+        console.error('[Index] Error fetching places:', error);
+        const errorMessageDiv = document.getElementById('error-message');
+        if (errorMessageDiv) {
+          errorMessageDiv.textContent = 'Failed to load places. Please try again later.';
+          errorMessageDiv.style.display = 'block';
+        }
         return [];
       }
     }
 
     function renderPlaces(places) {
       placesContainer.innerHTML = '';
+      if (!places || places.length === 0) {
+        placesContainer.innerHTML = '<p>No places available.</p>';
+        return;
+      }
       places.forEach(place => {
         const card = document.createElement('div');
         card.classList.add('place-card');
         card.setAttribute('data-price', place.price);
         card.innerHTML = `
-          <h3>${place.title}</h3>
+          <h3>${place.title || 'No title'}</h3>
           <p>${place.description || 'No description provided.'}</p>
-          <p><strong>Price per night:</strong> $${place.price}</p>
+          <p><strong>Price per night:</strong> $${place.price || 'N/A'}</p>
           <p><strong>Location:</strong> ${place.latitude}, ${place.longitude}</p>
           <button class="details-button" onclick="window.location.href='place.html?placeId=${place.id}'">View Details</button>
         `;
@@ -72,6 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
       allPlaces = await fetchPlaces();
       renderPlaces(allPlaces);
     }
+    // Call displayErrorMessage before rendering places
+    displayErrorMessage();
     initializePlaces();
 
     // -----------------------------------------------------------
@@ -82,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (filterSelect) {
       filterSelect.addEventListener('change', () => {
         const selectedValue = filterSelect.value;
-        console.log('[Places] Filter selected:', selectedValue);
+        console.log('[Index] Filter selected:', selectedValue);
         const placeCards = document.querySelectorAll('.place-card');
         placeCards.forEach(card => {
           const price = parseFloat(card.getAttribute('data-price'));

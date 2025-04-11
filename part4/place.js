@@ -158,66 +158,22 @@ document.addEventListener('DOMContentLoaded', () => {
         errorMessageDiv.style.display = 'block';
     });
 
-    // Handle review form submission
-    const reviewForm = document.getElementById('review-form');
-    if (reviewForm) {
-        reviewForm.addEventListener('submit', (event) => {
-            event.preventDefault();
-
-            const reviewText = document.getElementById('review-text').value;
-            const rating = parseInt(document.getElementById('rating').value);
+    // Handle "Add Review" button redirect
+    const addReviewButton = document.getElementById('add-review-button');
+    if (addReviewButton) {
+        addReviewButton.addEventListener('click', () => {
+            console.log('[Place] Add Review button clicked');
             const token = getCookie('token');
-
             if (!token) {
-                errorMessageDiv.textContent = 'You must be logged in to submit a review.';
-                errorMessageDiv.style.display = 'block';
+                console.log('[Place] No token found, redirecting to index.html with error');
+                // Store an error message in localStorage to display on index.html
+                localStorage.setItem('errorMessage', 'You must be logged in to add a review.');
+                window.location.href = 'index.html';
                 return;
             }
-
-            const reviewData = {
-                text: reviewText,
-                rating: rating,
-                place_id: placeId
-            };
-
-            fetch('http://localhost:5000/api/v1/reviews/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(reviewData)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    if (response.status === 401) {
-                        throw new Error('Unauthorized: Please log in again.');
-                    }
-                    if (response.status === 400) {
-                        return response.json().then(data => {
-                            throw new Error(data.error || 'Invalid review data. Please check your input.');
-                        });
-                    }
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('[Place] Review submitted:', data);
-                // Clear the form
-                reviewForm.reset();
-                // Refetch place details to update the reviews list
-                return fetchPlaceDetails();
-            })
-            .then(data => {
-                // Re-render the reviews
-                renderReviews(data.reviews);
-            })
-            .catch(error => {
-                console.error('[Place] Error submitting review:', error);
-                errorMessageDiv.textContent = error.message || 'An error occurred while submitting your review.';
-                errorMessageDiv.style.display = 'block';
-            });
+            // Redirect to add_review.html with the placeId
+            console.log('[Place] User authenticated, redirecting to add_review.html');
+            window.location.href = `add_review.html?placeId=${placeId}`;
         });
     }
 });

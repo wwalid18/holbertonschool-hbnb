@@ -1,3 +1,5 @@
+/* part4/styles.css */
+
 /* Reset default styles */
 * {
     margin: 0;
@@ -5,179 +7,351 @@
     box-sizing: border-box;
 }
 
+/* Global styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    color: #ffffff;
     line-height: 1.6;
-    background-color: #f5f5f5;
+    min-height: 100vh;
 }
 
+/* Header and Navigation */
 header {
-    background-color: #ff6200;
-    padding: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-.error-message {
-    color: #ff0000;
-    margin-bottom: 1rem;
-    text-align: center;
-    display: none; /* Hidden by default */
-}
-
-.logo img {
-    height: 60px; /* Adjust based on your logo size */
-}
-
-.login-button {
-    color: rgb(87, 83, 83);
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 1.5rem;
-}
-
-.login-button:hover {
-    text-decoration: underline;
-}
-
-main {
-    padding: 2rem;
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
-h2 {
-    font-size: 1.5rem;
+.logo img {
+    height: 60px;
+    filter: brightness(0) invert(1); /* Makes the logo white */
+}
+
+.login-button {
+    text-decoration: none;
+    color: #ffffff;
+    background-color: transparent;
+    border: 1px solid #ffffff;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 1.25rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.login-button:hover {
+    background-color: #ffffff;
+    color: #1e3a8a;
+}
+
+/* Main Content */
+main {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+/* Headings */
+h1, h2, h3 {
+    color: #ffffff;
     margin-bottom: 1rem;
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
     text-align: center;
+}
+
+h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
 }
 
 h3 {
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.4rem;
+    font-weight: 500;
 }
 
-.filter {
+/* Error Message */
+.error-message {
+    color: #f87171;
+    margin-bottom: 1rem;
     text-align: center;
+    display: none;
+    font-weight: 500;
+}
+
+/* Filter Section (index.html) */
+.filter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
     margin-bottom: 2rem;
 }
 
 .filter label {
-    margin-right: 0.5rem;
-    font-weight: bold;
+    font-weight: 500;
+    color: #d1d5db;
 }
 
 .filter select {
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ffffff;
+    border-radius: 20px;
+    font-size: 1rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.places {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
+.filter select:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
-.place-card {
-    background-color: white;
-    padding: 1rem;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    flex: 1;
+.filter select option {
+    background-color: #1e3a8a;
+    color: #ffffff;
 }
 
-.place-card h3 {
-    margin-bottom: 0.5rem;
-}
-
-.place-card p {
-    margin-bottom: 1rem;
-}
-
-.place-info {
-    background-color: white;
-    padding: 1rem;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+/* Places List (index.html) */
+#places-list {
     margin-bottom: 2rem;
 }
 
-.place-info p {
-    margin-bottom: 0.5rem;
+#places-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
 }
 
-#reviews h3 {
-    margin-top: 2rem;
+.place-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    padding: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.place-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+}
+
+.place-card h3 {
+    margin-bottom: 0.75rem;
+    color: #ffffff;
+}
+
+.place-card p {
+    margin-bottom: 0.75rem;
+    color: #d1d5db;
+}
+
+/* Buttons */
+.details-button {
+    display: inline-block;
+    background-color: #f59e0b;
+    color: #1e3a8a;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 20px;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.details-button:hover {
+    background-color: #d97706;
+    transform: scale(1.05);
+}
+
+.details-button:active {
+    transform: scale(0.95);
+}
+
+/* Place Details (place.html) */
+#place-details .place-info {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+#place-details .place-info p {
+    margin-bottom: 0.75rem;
+    color: #d1d5db;
+}
+
+#place-details .place-info p strong {
+    color: #ffffff;
+}
+
+/* Reviews Section (place.html) */
+#reviews {
+    margin-bottom: 2rem;
 }
 
 .review-card {
-    background-color: white;
-    padding: 1rem;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    padding: 1.5rem;
     margin-bottom: 1rem;
 }
 
 .review-card p {
     margin-bottom: 0.5rem;
+    color: #d1d5db;
 }
 
+.review-card p strong {
+    color: #ffffff;
+}
+
+/* Add Review Section (place.html and add_review.html) */
+#add-review {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    padding: 2rem;
+}
+
+/* Form Styles (login.html, add_review.html) */
 .form-container {
-    background-color: white;
-    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.form-container label {
+    font-weight: 500;
+    color: #d1d5db;
+}
+
+.form-container input,
+.form-container textarea,
+.form-container select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-label {
-    display: block;
-    margin-top: 1rem;
-    font-weight: bold;
-}
-
-input, textarea, select {
-    width: 100%;
-    padding: 0.5rem;
-    margin-top: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-textarea {
-    height: 100px;
-    resize: none;
-}
-
-.details-button {
-    display: inline-block;
-    background-color: #ff6200;
-    color: white;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 5px;
-    text-decoration: none;
-    text-align: center;
-    margin-top: 1rem;
-    cursor: pointer;
     font-size: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
-.details-button:hover {
-    background-color: #e55a00;
+.form-container input:focus,
+.form-container textarea:focus,
+.form-container select:focus {
+    outline: none;
+    border-color: #f59e0b;
+    background: rgba(255, 255, 255, 0.2);
 }
 
+.form-container textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.form-container select option {
+    background-color: #1e3a8a;
+    color: #ffffff;
+}
+
+/* Messages (add_review.html) */
+#message {
+    text-align: center;
+    font-weight: 500;
+}
+
+/* Footer */
 footer {
-    background-color: #ff6200;
-    color: white;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    color: #d1d5db;
     text-align: center;
     padding: 1rem;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+    margin-top: 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .logo img {
+        height: 35px;
+    }
+
+    .login-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    #places-container {
+        grid-template-columns: 1fr;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+    }
+
+    .form-container {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    main {
+        padding: 1rem;
+    }
+
+    .place-card, .review-card, #place-details .place-info, #add-review {
+        padding: 1rem;
+    }
+
+    .details-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+#site-footer {
+    flex-shrink: 0; /* Prevent footer from shrinking */
 }
