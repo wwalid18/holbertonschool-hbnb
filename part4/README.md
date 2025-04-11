@@ -54,42 +54,42 @@ HBnB is an Airbnb clone that provides both a RESTful API and a dynamic client-si
 
 ## Project Structure
 
-/hbnb
-├── app/
-│   ├── __init__.py              # Application factory, extension initialization, and route registration
-│   ├── models/
-│   │   ├── __init__.py          # Import all models (User, Place, Review, Amenity)
-│   │   ├── base_model.py        # Base model with common functionality
-│   │   ├── user.py              # User model, password hashing and verification
-│   │   ├── place.py             # Place model with relationships to Amenity and Review
-│   │   ├── review.py            # Review model
-│   │   └── amenity.py           # Amenity model
-│   ├── api/
-│   │   └── v1/
-│   │       ├── auth.py          # Authentication endpoints (login, reset password)
-│   │       ├── users.py         # Admin-only endpoints for managing users
-│   │       ├── places.py        # Endpoints for managing places
-│   │       ├── reviews.py       # Endpoints for managing reviews
-│   │       └── amenities.py     # Endpoints for managing amenities
-│   ├── persistence/
-│   │   ├── repository.py        # Abstract and SQLAlchemy repository implementations
-│   │   └── user_repository.py   # Custom repository for User-specific operations
-│   └── services/
-│       ├── __init__.py          # Exposes the HBnBFacade instance
-│       └── facade.py            # Facade pattern to centralize business logic
-├── config.py                    # Application configuration settings (development, production)
-├── run.py                       # Entry point to run the Flask application
-├── part4/ (front-end files)
-│   ├── index.html               # Main page listing all places
-│   ├── login.html               # Login page
-│   ├── place.html               # Place details page
-│   ├── add_review.html          # (Optional) Separate page for adding reviews
-│   ├── styles.css               # CSS file for front-end styling
-│   ├── auth.js                  # JavaScript for authentication (login, logout)
-│   ├── index.js                 # JavaScript for fetching and filtering places
-│   ├── place.js                 # JavaScript for fetching place details and handling review submission
-│   └── add_review.js            # JavaScript for submitting reviews
-└── README.md                    # This file
+- /hbnb
+- ├── app/
+- │   ├── __init__.py              # Application factory, extension initialization, and route registration
+- │   ├── models/
+- │   │   ├── __init__.py          # Import all models (User, Place, Review, Amenity)
+- │   │   ├── base_model.py        # Base model with common functionality
+- │   │   ├── user.py              # User model, password hashing and verification
+- │   │   ├── place.py             # Place model with relationships to Amenity and Review
+- │   │   ├── review.py            # Review model
+- │   │   └── amenity.py           # Amenity model
+- │   ├── api/
+- │   │   └── v1/
+- │   │       ├── auth.py          # Authentication endpoints (login, reset password)
+- │   │       ├── users.py         # Admin-only endpoints for managing users
+- │   │       ├── places.py        # Endpoints for managing places
+- │   │       ├── reviews.py       # Endpoints for managing reviews
+- │   │       └── amenities.py     # Endpoints for managing amenities
+- │   ├── persistence/
+- │   │   ├── repository.py        # Abstract and SQLAlchemy repository implementations
+- │   │   └── user_repository.py   # Custom repository for User-specific operations
+- │   └── services/
+- │       ├── __init__.py          # Exposes the HBnBFacade instance
+- │       └── facade.py            # Facade pattern to centralize business logic
+- ├── config.py                    # Application configuration settings (development, production)
+- ├── run.py                       # Entry point to run the Flask application
+- ├── part4/ (front-end files)
+- │   ├── index.html               # Main page listing all places
+- │   ├── login.html               # Login page
+- │   ├── place.html               # Place details page
+- │   ├── add_review.html          # (Optional) Separate page for adding reviews
+- │   ├── styles.css               # CSS file for front-end styling
+- │   ├── auth.js                  # JavaScript for authentication (login, logout)
+- │   ├── index.js                 # JavaScript for fetching and filtering places
+- │   ├── place.js                 # JavaScript for fetching place details and handling review submission
+- │   └── add_review.js            # JavaScript for submitting reviews
+- └── README.md                    # This file
 
 
 ## Setup and Installation
