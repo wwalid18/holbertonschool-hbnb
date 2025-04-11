@@ -101,7 +101,6 @@ class UserResource(Resource):
         else:
             return {'error': 'Failed to delete user'}, 400
 
-    @jwt_required()
     def get(self, user_id):
         """Retrieve a specific user (protected)."""
         facade = HBnBFacade()
