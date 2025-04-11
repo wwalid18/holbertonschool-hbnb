@@ -11,8 +11,8 @@ review_model = ns.model('Review', {
 })
 
 update_review_model = ns.model('UpdateReview', {
-    'text': fields.String(required=False, description='Updated text of the review'),
-    'rating': fields.Integer(required=False, description='Updated rating (1-5)')
+    'text': fields.String(required=False, description='Updated text of the review', nullable=False),
+    'rating': fields.Integer(required=False, description='Updated rating (1-5)', nullable=False)
 })
 
 @ns.route('/')

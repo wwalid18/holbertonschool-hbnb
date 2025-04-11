@@ -17,11 +17,11 @@ admin_user_registration_model = ns.model('AdminUserRegistration', {
 
 # Model for admin updating user information (allows modifying email and password)
 admin_user_update_model = ns.model('AdminUserUpdate', {
-    'first_name': fields.String(required=False, description='Updated first name of the user'),
-    'last_name': fields.String(required=False, description='Updated last name of the user'),
-    'email': fields.String(required=False, description='Updated email address'),
-    'password': fields.String(required=False, description='Updated password'),
-    'is_admin': fields.Boolean(required=False, description='Updated admin status')
+    'first_name': fields.String(required=False, description='Updated first name of the user', nullable=False),
+    'last_name': fields.String(required=False, description='Updated last name of the user', nullable=False),
+    'email': fields.String(required=False, description='Updated email address', nullable=False),
+    'password': fields.String(required=False, description='Updated password', nullable=False),
+    'is_admin': fields.Boolean(required=False, description='Updated admin status', nullable=False)
 })
 
 @ns.route('/')

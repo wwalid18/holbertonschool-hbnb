@@ -11,6 +11,11 @@ amenity_model = ns.model('Amenity', {
     'place_id': fields.String(required=True, description='ID of the place')
 })
 
+amenity_model1 = ns.model('Amenity', {
+    'name': fields.String(required=False, description='Name of the amenity', nullable=False),
+    'place_id': fields.String(required=False, description='ID of the place', nullable=False)
+})
+
 @ns.route('/')
 class AmenityList(Resource):
 
@@ -32,7 +37,7 @@ class AmenityList(Resource):
 class AmenityResource(Resource):
     @jwt_required()
     @admin_required
-    @ns.expect(amenity_model, validate=True)
+    @ns.expect(amenity_model1, validate=True)
     @ns.response(200, 'Amenity updated successfully')
     @ns.response(404, 'Amenity not found')
     def put(self, amenity_id):
